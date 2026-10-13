@@ -100,7 +100,9 @@ Shareable distributes a URL. It does not call `RecordingStudioAccessible.authori
 
 ## Not built yet
 
-Share button, share menu, inline links, copy-link component, Stimulus, and the dummy share demo are later work. The dummy app still boots the host shell. It does not opt any recordable into Shareable.
+Share button, share menu, inline links, copy-link component, and Stimulus are later work. FlatPack is adding the share button.
+
+The dummy app opts `Page` into Shareable with a host `public_url` and leaves Publishable off. `Folder` stays unshared. Visit `/shareable` after signing in to see the resolved payload, plain destination links, `shareable_head_tags`, and the unavailable folder.
 
 ## Dummy app pins
 

@@ -63,7 +63,7 @@ class RecordingStudioTemplateTest < ActiveSupport::TestCase
     Current.actor = nil
   end
 
-  test "workspace opts into accessible and shareable stays disabled" do
+  test "workspace opts into accessible and page opts into shareable" do
     workspace_source = File.read(Rails.root.join("app/models/workspace.rb"))
     shareable_source = File.read(
       RecordingStudioShareable::Engine.root.join("lib/recording_studio/capabilities/shareable.rb")
@@ -74,13 +74,20 @@ class RecordingStudioTemplateTest < ActiveSupport::TestCase
     refute_includes shareable_source, "enable_capability"
     refute_includes shareable_source, "set_capability_options"
 
+    page_source = File.read(Rails.root.join("app/models/page.rb"))
+
+    assert_includes page_source, "Capabilities::Shareable.to"
+    assert_includes page_source, "public_url:"
+    refute_includes page_source, "publishable"
+
     assert RecordingStudio.capability_enabled?(:accessible, for: Workspace)
     refute RecordingStudio.capability_enabled?(:shareable, for: Workspace)
     refute RecordingStudio.capability_enabled?(:accessible, for: Folder)
     refute RecordingStudio.capability_enabled?(:accessible, for: Page)
     refute RecordingStudio.capability_enabled?(:shareable, for: Folder)
-    refute RecordingStudio.capability_enabled?(:shareable, for: Page)
-    assert_empty RecordingStudio.configuration.enabled_recordable_types_for(:shareable)
+    assert RecordingStudio.capability_enabled?(:shareable, for: Page)
+    refute RecordingStudio.capability_enabled?(:publishable, for: Page)
+    assert_equal [ "Page" ], RecordingStudio.configuration.enabled_recordable_types_for(:shareable)
     assert_includes ApplicationController.ancestors, RecordingStudio::UsesDefaultLayout
   end
 end
