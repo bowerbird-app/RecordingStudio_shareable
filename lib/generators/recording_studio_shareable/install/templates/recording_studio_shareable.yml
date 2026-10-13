@@ -1,0 +1,19 @@
+development:
+  public_base_url: "http://localhost:3000"
+  destinations:
+    - copy
+    - native
+    - linkedin
+    - x
+    - facebook
+    - email
+
+production:
+  public_base_url: "https://example.com"
+  destinations:
+    - copy
+    - native
+    - linkedin
+    - x
+    - facebook
+    - email

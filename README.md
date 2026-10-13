@@ -1,172 +1,118 @@
-# GemTemplate
+# Recording Studio Shareable
 
-Internal template for building Rails engine addons on top of Recording Studio 4.x.
+Opt-in sharing for Recording Studio recordables. A host chooses which types can be shared. Shareable resolves one absolute public URL, builds social destination links, and can render social preview tags.
 
-## What's Included
+Publishable decides whether a recordable is public. Shareable only distributes an eligible URL. It does not grant access, and it does not duplicate publication rules.
 
-- **Recording Studio** 4.x gem pinned and configured
-- **Devise** authentication with a pre-seeded admin user
-- **Workspace**, **Folder**, and **Page** recordables seeded into the dummy host app
-- **FlatPack** UI component library for all views
-- **Dummy app** (`test/dummy/`) with a FlatPack sign-in screen, a home page on Recording Studio's default layout, mounted Recording Studio routes, and FlatPack's built-in rounded theme
+This phase has no share button, menu, or Stimulus controller. FlatPack is adding a share button. `FlatPack::TextInput` and `FlatPack::TextArea` already support `quick_copy: true`. FlatPack has no `navigator.share` support yet.
 
-Authenticated dummy pages use Recording Studio's shared default layout (`RecordingStudio::UsesDefaultLayout`) plus FlatPack CSS and JS. Devise keeps its own sign-in layout. Dummy `/docs/*` pages stay in the dummy app as a host-app sandbox; they are not the product README.
-
-## Quick Start
-
-### Cursor Cloud Agent (Recommended)
-
-A Cloud Agent boots this repo into a ready-to-use dev environment with no manual steps. The setup lives in `.cursor/`:
-
-- `install.sh` provisions Ruby (pinned by `.ruby-version`), PostgreSQL 16, all gems, the seeded dummy database, and compiled CSS at build time, then fetches Recording Studio skills.
-- `start.sh` starts PostgreSQL on every boot.
-- `environment.json` runs the `rails-server` and `tailwind-watch` terminals and exposes port 3000.
-
-Open port 3000 and sign in at `/users/sign_in`. No environment variables are required — the dummy app's `database.yml` defaults match the provisioned PostgreSQL cluster.
-
-### GitHub Codespaces
-
-1. Click **Code** → **Codespaces** → **Create codespace**
-2. Wait for setup to complete
-3. Run:
-   ```bash
-   cd test/dummy
-   bin/rails db:setup
-   bin/dev
-   ```
-4. Open port 3000 — you'll land on the dummy app home page and can sign in at `/users/sign_in`
-
-The dummy app is intended as a host-app validation surface for authentication, FlatPack rendering, Tailwind source scanning, and Recording Studio route wiring.
-
-Dummy credentials (`test/dummy/config/credentials.yml.enc`) are encrypted with the shared RecordingStudio_* development master key. Set `RAILS_MASTER_KEY` or put that key in `test/dummy/config/master.key` (gitignored). Keep the encrypted file; do not generate a per-repo dummy key.
-
-### Login Credentials
-
-| Field    | Value             |
-|----------|-------------------|
-| Email    | admin@admin.com   |
-| Password | Password          |
-
-The login form is prefilled with these credentials for fast access.
-
-### Useful Routes
-
-- `/` — dummy app home page
-- `/users/sign_in` — Devise sign-in page
-- `/recording_studio` — redirect to `/` while the mounted Recording Studio engine remains data/API-focused
-- `/docs/install`, `/docs/config`, `/docs/recordable_types`, `/docs/recordings_tree`, `/docs/gem_views`, `/docs/methods` — dummy-only starter pages
-
-The home page in `test/dummy/app/views/home/index.html.erb` is a starting point for a minimal demo of the gem's primary behavior. Keep deeper explanations on the dummy docs pages, not in this README.
-
-## Architecture
-
-### Root Recording Pattern
-
-This template follows Recording Studio's root recording pattern:
-
-- **Workspace** is the top-level recordable
-- **Folder** and **Page** demonstrate nested recordables under the workspace root
-- Each configured recordable declares `recording_studio_recordable(...)`; strict declaration validation stays enabled
-- A root `RecordingStudio::Recording` wraps the Workspace
-- `Current.actor` is set from `current_user` (Devise) in `ApplicationController`
-
-### Extending Recording Studio
-
-To add new recordable types:
-
-1. Create your model (e.g., `Page`, `Comment`)
-2. Register it in `config/initializers/recording_studio.rb`:
-   ```ruby
-   RecordingStudio.configure do |config|
-     config.recordable_types = ["Workspace", "YourNewType"]
-   end
-   ```
-3. Declare whether the model can be a root and which parents may contain it:
-   ```ruby
-   class YourNewType < ApplicationRecord
-     recording_studio_recordable label: "Your new type",
-                                 root: false,
-                                 allowed_parent_types: ["Workspace", "Folder"]
-   end
-   ```
-4. Validate declarations and create recordings under the root:
-   ```ruby
-   RecordingStudio.validate_recordable_declarations!
-   root_recording = RecordingStudio.root_recording_for(workspace)
-   root_recording.record(YourNewType) do |record|
-     record.title = "Example"
-   end
-   ```
-
-### Recordable Declarations
-
-Every configured ActiveRecord recordable type must declare its hierarchy rules. Declarations are required; they are not version-specific.
-
-- `Workspace` declares `root: true`
-- `Folder` and `Page` declare `root: false, allowed_parent_types: ["Workspace", "Folder"]`
-- `config.require_recordable_declarations = true` remains enabled in the dummy app initializer
-
-Useful console checks:
+## Install
 
 ```ruby
-RecordingStudio.validate_recordable_declarations!
-RecordingStudio.root_recordable_types
-RecordingStudio.allowed_parent_types_for("Page")
+gem "recording_studio", "~> 4.2"
+gem "recording_studio_shareable"
 ```
 
-### Capabilities
+```bash
+bundle install
+bin/rails generate recording_studio_shareable:install
+```
 
-Capability mixins are opt-in. Installing this gem does not enable mixins on host types.
+The gem has no migrations and no tables.
 
-The dummy Workspace enables Accessible because that addon is bundled:
+## Activation
+
+Loading the gem registers `:shareable` and enables it on nothing. Opt in per recordable:
 
 ```ruby
-RecordingStudio.enable_capability(:accessible, on: Workspace)
+class Page < ApplicationRecord
+  recording_studio_recordable label: "Page", root: false, allowed_parent_types: ["Workspace"]
+
+  include RecordingStudio::Capabilities::Shareable.to(
+    public_url: ->(page) { "/pages/#{page.id}" }
+  )
+end
 ```
 
-The template also ships one example mixin that uses core 4.2.0's `include_for` factory:
+`.to` wraps `RecordingStudio::Capabilities.include_for`. Do not call `enable_capability` yourself.
+
+## URL resolution
+
+`RecordingStudioShareable::SharePayload.for(recordable_or_recording)` returns the share decision.
+
+1. The recordable type must have Shareable enabled. Otherwise the payload is unavailable.
+2. If Publishable is enabled for that type, the URL is `published_url` and nothing else. Drafts, scheduled records, and unpublished records return nil from Publishable, and Shareable does not fall back to another URL.
+3. Otherwise Shareable calls the host `public_url` callable from `.to`, from `SharePayload.for(..., public_url:)`, or from configuration.
+4. Relative paths (starting with `/`) are prefixed with `public_base_url`. Absolute `http` and `https` URLs are left as they are.
+5. Blank values, non-http(s) values, and URLs whose path or query contains `active_storage`, `publishable/preview`, or `recording_studio` are rejected. Preview and admin routes are never share links.
 
 ```ruby
-include RecordingStudio::Capabilities::Example.to(label: "dummy workspace")
+RecordingStudioShareable.configure do |config|
+  config.public_base_url = "https://press.example"
+  config.destinations = %i[copy native linkedin x facebook email]
+  config.public_url = ->(recordable) { recordable.try(:public_path) }
+  config.title = ->(recordable) { recordable.try(:title) }
+  config.description = ->(recordable) { recordable.try(:description) }
+  config.image = ->(_recordable) { "https://cdn.example/card.png" }
+end
 ```
 
-`.to` wraps `RecordingStudio::Capabilities.include_for`. It does not add a fourth verb and it does not call `enable_capability` / `set_capability_options` itself. Folder and Page stay without the example mixin.
+`public_base_url` is also read from `config/recording_studio_shareable.yml` or `Rails.application.config.x.recording_studio_shareable`.
 
-Use core `RecordingStudio::Hooks` and `RecordingStudio::Services::BaseService`. Do not copy those classes into a new addon.
+## Title, description, and image
 
-### FlatPack UI Components
+Title uses the first present value: an override, Publishable `social_title`, Publishable `seo_title`, `title`, `name`, then the recordable type label.
 
-All views use FlatPack ViewComponents. Available components include:
+Description uses an override, `social_description`, `seo_description`, then `description`. A missing description is fine.
 
-- `FlatPack::Button::Component` — Buttons (`:primary`, `:secondary`, `:ghost`)
-- `FlatPack::Card::Component` — Cards (`:default`, `:elevated`, `:outlined`)
-- `FlatPack::Alert::Component` — Alerts (`:success`, `:error`, `:warning`, `:info`)
-- `FlatPack::Badge::Component` — Status badges
-- `FlatPack::Table::Component` — Data tables
-- `FlatPack::TextInput::Component`, `EmailInput`, `PasswordInput` — Form inputs
-- `FlatPack::PageNav::Component` — Default-layout page navigation
-- `FlatPack::PageTitle::Component` — Page titles
+Image is a host-supplied absolute `https` URL only. Relative paths, `http` URLs, and Active Storage URLs are dropped. Publishable social images are not read, because those resolve through Attachable preview paths.
 
-Use the live FlatPack demo app at [flatpack.bowerbird.io](https://flatpack.bowerbird.io/) as the approved UI reference for current shared patterns. Its component table is the fastest way to discover available FlatPack components before introducing new custom UI.
+Pass a recording when you want Publishable text fallbacks. `current_publishable` is read from the recording, or from the recordable when it responds to that method.
 
-See the [FlatPack README](https://github.com/bowerbird-app/flatpack) for full documentation.
+## Destinations
 
-## Tech Stack
+The default list is `copy`, `native`, `linkedin`, `x`, `facebook`, and `email`. Narrow it in configuration, in `.to(destinations:)`, or as a `SharePayload` override.
 
-| Component       | Version |
-|-----------------|---------|
-| Ruby            | 3.3+    |
-| Rails           | 8.1+    |
-| PostgreSQL      | 16      |
-| TailwindCSS     | 4       |
-| RecordingStudio | 4.x (`~> 4.2` in the gemspec; dummy GitHub tag `v4.5.0`) |
-| Accessible      | dummy GitHub tag `v0.15.0` |
+Social links are normal share endpoints, with query values encoded by `URI.encode_www_form`:
+
+- LinkedIn: `https://www.linkedin.com/sharing/share-offsite/?url=`
+- X: `https://twitter.com/intent/tweet?url=&text=`
+- Facebook: `https://www.facebook.com/sharer/sharer.php?u=`
+- Email: `mailto:?subject=&body=`
+
+`copy` and `native` are destination names only. They do not have URLs. Native device sharing waits on the later UI.
+
+`payload.destination_urls` is empty when the payload is unavailable.
+
+## Metadata
+
+In a layout:
+
+```erb
+<%= shareable_head_tags(recording) %>
+```
+
+When Publishable is enabled for that recordable, the helper calls `publishable_head_tags` if the view has it, and otherwise renders nothing. That avoids a second set of canonical and Open Graph tags. When Publishable is not enabled, the helper emits canonical, `og:title`, `og:description`, `og:url`, `og:image`, and the matching `twitter:*` tags from the payload. Missing description or image omits those tags. An unavailable payload renders nothing.
+
+## Security
+
+Shareable distributes a URL. It does not call `RecordingStudioAccessible.authorized?`, and it does not make a draft reachable. If Publishable is enabled and `published_url` is blank or unsafe, sharing stays off even if the host also supplied a direct URL.
+
+## Not built yet
+
+Share button, share menu, inline links, copy-link component, Stimulus, and the dummy share demo are later work. The dummy app still boots the host shell. It does not opt any recordable into Shareable.
+
+## Dummy app pins
+
+The dummy app pins these GitHub tags:
+
+| Gem | Tag |
+| --- | --- |
+| RecordingStudio | dummy GitHub tag `v4.5.0` |
+| Accessible | dummy GitHub tag `v0.15.0` |
 | Root Switchable | dummy GitHub tag `v0.9.0` |
-| FlatPack        | dummy GitHub tag `v0.1.196` |
-| Devise          | latest  |
+| FlatPack | dummy GitHub tag `v0.1.196` |
 
-The dummy Gemfile keeps `github:` sources so Bundler can fetch those gems. The gemspec still pins `recording_studio` to `~> 4.2` so copied addons declare the core dependency even when GitHub is the fetch source.
+Publishable is not a dependency of this gem. The dummy app does not bundle it yet.
 
-## Documentation
-
-The original gem template documentation is preserved in `docs/gem_template/` as architectural reference material. Use it as background on the engine conventions; this README and the dummy app are the source of truth for the Recording Studio addon workflow.
+Sign in to the dummy app with `admin@admin.com` / `Password`.

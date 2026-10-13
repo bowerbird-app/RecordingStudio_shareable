@@ -2,23 +2,23 @@
 
 require "test_helper"
 
-class GemTemplateTest < Minitest::Test
+class RecordingStudioShareableTest < Minitest::Test
   def test_version_matches_release
-    assert_equal "0.2.3", ::GemTemplate::VERSION
+    assert_equal "0.2.3", ::RecordingStudioShareable::VERSION
   end
 
   def test_engine_exists
-    assert_kind_of Class, ::GemTemplate::Engine
+    assert_kind_of Class, ::RecordingStudioShareable::Engine
   end
 
   def test_gemspec_pins_recording_studio_4_2
-    gemspec = File.read(File.expand_path("../gem_template.gemspec", __dir__))
+    gemspec = File.read(File.expand_path("../recording_studio_shareable.gemspec", __dir__))
 
     assert_includes gemspec, 'spec.add_dependency "recording_studio", "~> 4.2"'
   end
 
   def test_gemspec_excludes_cursor_config
-    spec = Gem::Specification.load(File.expand_path("../gem_template.gemspec", __dir__))
+    spec = Gem::Specification.load(File.expand_path("../recording_studio_shareable.gemspec", __dir__))
     cursor_files = spec.files.select { |path| path == ".cursor" || path.split("/").include?(".cursor") }
 
     assert_empty cursor_files, "gemspec must not package .cursor/ (got #{cursor_files.inspect})"
@@ -111,21 +111,23 @@ class GemTemplateTest < Minitest::Test
   end
 
   def test_template_does_not_ship_copied_core_hooks_or_base_service
-    refute File.exist?(File.expand_path("../lib/gem_template/hooks.rb", __dir__))
-    refute File.exist?(File.expand_path("../lib/gem_template/services/base_service.rb", __dir__))
-    refute File.exist?(File.expand_path("../lib/gem_template/services/example_service.rb", __dir__))
+    refute File.exist?(File.expand_path("../lib/recording_studio_shareable/hooks.rb", __dir__))
+    refute File.exist?(File.expand_path("../lib/recording_studio_shareable/services/base_service.rb", __dir__))
+    refute File.exist?(File.expand_path("../lib/recording_studio_shareable/services/example_service.rb", __dir__))
   end
 
-  def test_example_capability_wraps_include_for_and_is_not_enabled_globally
-    source = File.read(File.expand_path("../lib/gem_template/capabilities/example.rb", __dir__))
+  def test_shareable_capability_wraps_include_for_and_is_not_enabled_globally
+    source = File.read(File.expand_path("../lib/recording_studio/capabilities/shareable.rb", __dir__))
 
     assert_includes source, "def self.to(**)"
-    assert_includes source, "RecordingStudio::Capabilities.include_for(:example, **)"
+    assert_includes source, "RecordingStudio::Capabilities.include_for(:shareable, **)"
     refute_includes source, "enable_capability"
     refute_includes source, "set_capability_options"
-    refute RecordingStudio.capability_enabled?(:example, for: "Folder")
-    refute RecordingStudio.capability_enabled?(:example, for: "Page")
-    assert_empty RecordingStudio.configuration.enabled_recordable_types_for(:example)
+    refute RecordingStudio.capability_enabled?(:shareable, for: "Folder")
+    refute RecordingStudio.capability_enabled?(:shareable, for: "Page")
+    refute RecordingStudio.capability_enabled?(:shareable, for: "Workspace")
+    assert_empty RecordingStudio.configuration.enabled_recordable_types_for(:shareable)
+    assert_empty Dir.glob(File.expand_path("../db/migrate/*.rb", __dir__))
   end
 
   def test_dummy_app_uses_recording_studio_default_layout
@@ -279,7 +281,7 @@ class GemTemplateTest < Minitest::Test
   end
 
   def test_engine_does_not_ship_a_home_view
-    view_path = File.expand_path("../app/views/gem_template/home/index.html.erb", __dir__)
+    view_path = File.expand_path("../app/views/recording_studio_shareable/home/index.html.erb", __dir__)
 
     refute File.exist?(view_path)
   end

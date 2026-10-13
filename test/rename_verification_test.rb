@@ -230,8 +230,10 @@ class RenameVerificationTest < Minitest::Test
     skip if @gem_name == "gem_template"
 
     ruby_files = Dir.glob(File.join(@root, "**", "*.rb"))
-    # Exclude test files and this verification test itself
-    ruby_files.reject! { |f| f.include?("test/dummy") || f.include?("rename_verification_test.rb") }
+    # Dummy app, this file, the rename-script identity pin, and the encrypted
+    # credentials assertion keep the original template key on purpose.
+    kept = %w[test/dummy rename_verification_test.rb rename_gem_identity_test.rb dummy_credentials_test.rb]
+    ruby_files.reject! { |file| kept.any? { |fragment| file.include?(fragment) } }
 
     files_with_old_refs = []
 
