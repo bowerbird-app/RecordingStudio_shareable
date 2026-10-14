@@ -2,20 +2,24 @@
 
 module RecordingStudioShareable
   module CopyLink
-    # Read-only link field. FlatPack quick_copy shows the copied toast.
+    # Full-width FlatPack copy button. Copied feedback is the button's own state.
     class Component < ViewComponent::Base
+      LABEL = "Copy link"
+
       def initialize(url:)
         super()
         @url = url
       end
 
       def call
-        render FlatPack::TextInput::Component.new(
-          name: "share_url",
-          label: "Link",
-          value: @url,
-          quick_copy: true
-        )
+        content_tag(:div, class: "w-full [&>span]:w-full [&>span>button]:w-full") do
+          render FlatPack::CopyButton::Component.new(
+            text: @url,
+            label: LABEL,
+            style: :secondary,
+            size: :md
+          )
+        end
       end
     end
   end

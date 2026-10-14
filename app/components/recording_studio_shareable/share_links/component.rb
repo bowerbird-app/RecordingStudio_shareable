@@ -2,7 +2,7 @@
 
 module RecordingStudioShareable
   module ShareLinks
-    # Full-width service buttons for the destinations that have URLs.
+    # Full-width secondary buttons, matching CopyButton's button style.
     class Component < ViewComponent::Base
       LABELS = { linkedin: "LinkedIn", x: "X", facebook: "Facebook", email: "Email" }.freeze
 
