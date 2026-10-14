@@ -28,8 +28,13 @@ class PressPageTest < ActionDispatch::IntegrationTest
     assert_select "img[src='#{Page::PRESS_IMAGE_PATH}']"
     assert_select "[aria-label='Share this page'][data-modal-id='share-page'][aria-haspopup='dialog']"
     assert_select "#share-page[role='dialog'], #share-page [role='dialog']"
-    assert_select "input[name='share_url'][readonly][value=?]", payload.url
-    assert_select "[aria-label='Copy input value']"
+    assert_select "input[name='share_url']", count: 0
+    assert_select "p", text: payload.url
+    assert_select "button[aria-label='Copy link'][data-fp-style='secondary'].fp-button.fp-copy-button"
+    assert_select "[data-flat-pack--clipboard-text-value=?]", payload.url
+    assert_select "[data-flat-pack--clipboard-copied-label-value='Copied']"
+    assert_select "[data-flat-pack--clipboard-target='label']", text: "Copy link"
+    assert_operator response.body.index("Copy link"), :<, response.body.index("Share on LinkedIn")
     assert_select "[aria-label='Share on LinkedIn'][href=?]", payload.destination_urls.fetch(:linkedin), text: "LinkedIn"
     assert_select "[aria-label='Share on X'][href=?]", payload.destination_urls.fetch(:x), text: "X"
     assert_select "[aria-label='Share on Facebook'][href=?]", payload.destination_urls.fetch(:facebook), text: "Facebook"
@@ -40,7 +45,7 @@ class PressPageTest < ActionDispatch::IntegrationTest
     assert_select "[aria-label='Share'] svg", count: 0
     assert_includes response.body, "recording-studio-shareable--share"
     assert_includes payload.url, "https://press.example/published/"
-    assert_includes response.body, %(value="#{payload.url}")
+    assert_includes response.body, %(data-flat-pack--clipboard-text-value="#{payload.url}")
     refute_includes response.body, "https://press.example/pages/#{@page.id}"
     assert_includes response.body, %(property="og:title")
     assert_includes response.body, %(rel="canonical")

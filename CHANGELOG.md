@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- The share sheet copies with a full-width FlatPack copy button labelled "Copy link". The URL sits under the preview card. The button shows "Copied" briefly.
+- Dummy FlatPack pin `v0.1.213` → `v0.1.235`.
+
 ## [0.4.0] - 2026-10-14
 
 ### Added

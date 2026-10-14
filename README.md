@@ -4,7 +4,7 @@ Opt-in sharing for Recording Studio recordables. A host chooses which types can 
 
 Publishable decides whether a recordable is public. Shareable only distributes an eligible URL. It does not grant access, and it does not duplicate publication rules.
 
-The share sheet is built from FlatPack's button, modal, tooltip, and text input. `FlatPack::TextInput` supports `quick_copy: true`. FlatPack has no `navigator.share` support yet, so this gem's Stimulus controller covers the device share button.
+The share sheet is built from FlatPack's button, copy button, modal, and tooltip. FlatPack has no `navigator.share` support yet, so this gem's Stimulus controller covers the device share button.
 
 ## Install
 
@@ -103,9 +103,9 @@ Shareable distributes a URL. It does not call `RecordingStudioAccessible.authori
 The gem renders the sheet with FlatPack primitives so it can move to FlatPack's share button later.
 
 - `RecordingStudioShareable::ShareButton::Component` opens the modal. `when_unavailable:` defaults to `:hide`, which renders nothing. `:disable` renders a disabled FlatPack button and a FlatPack tooltip with `unavailable_reason`. The disabled control has `aria-disabled`, stays reachable from the keyboard, points at the tooltip with `aria-describedby`, and contains no URL.
-- `RecordingStudioShareable::ShareModal::Component` shows the preview, copy field, device share, and service buttons.
-- `RecordingStudioShareable::CopyLink::Component` is a read-only `FlatPack::TextInput` with `quick_copy: true`. The copied toast comes from FlatPack.
-- `RecordingStudioShareable::ShareLinks::Component` builds LinkedIn, X, Facebook, and email buttons.
+- `RecordingStudioShareable::ShareModal::Component` shows the preview, the URL under that card, the copy button, device share, and service buttons.
+- `RecordingStudioShareable::CopyLink::Component` is a full-width `FlatPack::CopyButton` labelled "Copy link". `text:` is the URL. The button shows "Copied" for a short time.
+- `RecordingStudioShareable::ShareLinks::Component` builds LinkedIn, X, Facebook, and email buttons. Copy button uses the same secondary full-width button style, so these stay on that style.
 - `recording-studio-shareable--share` reveals the device share button only when `navigator.share` exists.
 
 The dummy app opts `Page` into Shareable and Publishable. Sign in and open `/press` for the public page. `shareable_head_tags` defer to Publishable there. `/pages` is an admin list of a published page, a draft, and a scheduled page, each with the share button in `:disable` mode. `Folder` stays unshared.
@@ -123,10 +123,10 @@ The dummy app pins these GitHub tags:
 | RecordingStudio | dummy GitHub tag `v4.5.0` |
 | Accessible | dummy GitHub tag `v0.15.0` |
 | Root Switchable | dummy GitHub tag `v0.9.0` |
-| FlatPack | dummy GitHub tag `v0.1.213` |
+| FlatPack | dummy GitHub tag `v0.1.235` |
 | Publishable | dummy GitHub tag `v0.8.1` |
 | Attachable | dummy GitHub tag `v0.15.0` |
 
-Publishable is not a dependency of this gem. The dummy app bundles it, with Attachable, so the page list can show real publish states. FlatPack is pinned to `v0.1.213` because Attachable requires that floor. Accessible stays on dummy GitHub tag `v0.15.0`.
+Publishable is not a dependency of this gem. The dummy app bundles it, with Attachable, so the page list can show real publish states. FlatPack is pinned to `v0.1.235` for `FlatPack::CopyButton`. Attachable requires `flat_pack >= 0.1.213`. Accessible stays on dummy GitHub tag `v0.15.0`.
 
 Sign in to the dummy app with `admin@admin.com` / `Password`.
