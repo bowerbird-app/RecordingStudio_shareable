@@ -2,10 +2,9 @@
 
 module RecordingStudioShareable
   module ShareLinks
-    # Icon buttons for the social destinations that have URLs.
+    # Full-width service buttons for the destinations that have URLs.
     class Component < ViewComponent::Base
       LABELS = { linkedin: "LinkedIn", x: "X", facebook: "Facebook", email: "Email" }.freeze
-      MARKS = { linkedin: "in", x: "X", facebook: "f" }.freeze
 
       def initialize(payload:)
         super()
@@ -19,7 +18,7 @@ module RecordingStudioShareable
       private
 
       def list_attributes
-        { class: "m-0 flex list-none flex-wrap justify-between gap-3 p-0", aria: { label: "Share destinations" } }
+        { class: "m-0 flex list-none flex-col gap-2 p-0", aria: { label: "Share destinations" } }
       end
 
       def items
@@ -27,9 +26,7 @@ module RecordingStudioShareable
       end
 
       def item(name, url)
-        content_tag(:li, class: "flex w-16 flex-col items-center gap-2 text-center") do
-          safe_join([destination_button(name, url), content_tag(:span, LABELS[name], class: "text-xs")])
-        end
+        content_tag(:li, class: "w-full") { destination_button(name, url) }
       end
 
       def destination_button(name, url)
@@ -37,24 +34,21 @@ module RecordingStudioShareable
       end
 
       def button_options(name, url)
-        options = shared_button_options(name, url)
-        return email_button_options(options) if name == :email
-
-        options.merge(text: MARKS.fetch(name), target: "_blank")
-      end
-
-      def shared_button_options(name, url)
-        { href: url, style: :secondary, size: :lg, class: "rounded-full", aria: { label: share_label(name) } }
-      end
-
-      def email_button_options(options)
-        options.merge(text: "Email", icon: "envelope", icon_only: true)
+        {
+          text: LABELS.fetch(name),
+          href: url,
+          target: (name == :email ? nil : "_blank"),
+          style: :secondary,
+          size: :md,
+          class: "w-full",
+          aria: { label: share_label(name) }
+        }
       end
 
       def share_label(name)
         return "Share by email" if name == :email
 
-        "Share on #{LABELS[name]}"
+        "Share on #{LABELS.fetch(name)}"
       end
     end
   end

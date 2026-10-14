@@ -80,7 +80,7 @@ Social links are normal share endpoints, with query values encoded by `URI.encod
 - Facebook: `https://www.facebook.com/sharer/sharer.php?u=`
 - Email: `mailto:?subject=&body=`
 
-`copy` and `native` are destination names only. They do not have URLs. Native device sharing waits on the later UI.
+`copy` and `native` are destination names only. They do not have URLs. The device share button is labelled Share and appears only when `navigator.share` exists.
 
 `payload.destination_urls` is empty when the payload is unavailable.
 
@@ -103,7 +103,7 @@ Shareable distributes a URL. It does not call `RecordingStudioAccessible.authori
 The gem renders the sheet with FlatPack primitives so it can move to FlatPack's share button later.
 
 - `RecordingStudioShareable::ShareButton::Component` opens the modal.
-- `RecordingStudioShareable::ShareModal::Component` shows the preview, copy field, device share, and destination icons.
+- `RecordingStudioShareable::ShareModal::Component` shows the preview, copy field, device share, and service buttons.
 - `RecordingStudioShareable::CopyLink::Component` is a read-only `FlatPack::TextInput` with `quick_copy: true`. The copied toast comes from FlatPack.
 - `RecordingStudioShareable::ShareLinks::Component` builds LinkedIn, X, Facebook, and email buttons.
 - `recording-studio-shareable--share` reveals the device share button only when `navigator.share` exists.

@@ -30,12 +30,14 @@ class PressPageTest < ActionDispatch::IntegrationTest
     assert_select "#share-page[role='dialog'], #share-page [role='dialog']"
     assert_select "input[name='share_url'][readonly][value=?]", payload.url
     assert_select "[aria-label='Copy input value']"
-    assert_select "[aria-label='Share on LinkedIn'][href=?]", payload.destination_urls.fetch(:linkedin)
-    assert_select "[aria-label='Share on X'][href=?]", payload.destination_urls.fetch(:x)
-    assert_select "[aria-label='Share on Facebook'][href=?]", payload.destination_urls.fetch(:facebook)
-    assert_select "[aria-label='Share by email'][href=?]", payload.destination_urls.fetch(:email)
+    assert_select "[aria-label='Share on LinkedIn'][href=?]", payload.destination_urls.fetch(:linkedin), text: "LinkedIn"
+    assert_select "[aria-label='Share on X'][href=?]", payload.destination_urls.fetch(:x), text: "X"
+    assert_select "[aria-label='Share on Facebook'][href=?]", payload.destination_urls.fetch(:facebook), text: "Facebook"
+    assert_select "[aria-label='Share by email'][href=?]", payload.destination_urls.fetch(:email), text: "Email"
+    assert_select "#share-page a svg", count: 0
     assert_select "[data-recording-studio-shareable--share-target='native'][hidden]"
-    assert_select "[aria-label='Share using this device']"
+    assert_select "[aria-label='Share']", text: "Share"
+    assert_select "[aria-label='Share'] svg", count: 0
     assert_includes response.body, "recording-studio-shareable--share"
     assert_includes response.body, %(href="#{payload.url}")
     assert_includes response.body, %(property="og:title")

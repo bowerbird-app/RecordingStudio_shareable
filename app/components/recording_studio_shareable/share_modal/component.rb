@@ -2,7 +2,7 @@
 
 module RecordingStudioShareable
   module ShareModal
-    # Share sheet: preview, copy field, optional device share, and destination icons.
+    # Share sheet: preview, copy field, optional device share, and service buttons.
     class Component < ViewComponent::Base
       def initialize(payload:, modal_id:, image_src: nil, image_alt: "")
         super()
@@ -73,10 +73,9 @@ module RecordingStudioShareable
         content_tag(:div, hidden: true, data: { recording_studio_shareable__share_target: "native" }) do
           render FlatPack::Button::Component.new(
             text: "Share",
-            icon: "share",
-            style: :primary,
+            style: :secondary,
             class: "w-full",
-            aria: { label: "Share using this device" },
+            aria: { label: "Share" },
             data: { action: "click->recording-studio-shareable--share#native" }
           )
         end
