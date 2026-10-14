@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-10-14
+
 ### Changed
 - The share sheet copies with a full-width FlatPack copy button labelled "Copy link". The URL sits under the preview card. The button shows "Copied" briefly.
 - Dummy FlatPack pin `v0.1.213` → `v0.1.235`.
@@ -137,7 +139,8 @@ New addons copied from this template are born on Recording Studio 4.x.
 - Comprehensive README and documentation
 - Basic test suite with Minitest
 
-[Unreleased]: https://github.com/bowerbird-app/recording_studio_shareable/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/bowerbird-app/recording_studio_shareable/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/bowerbird-app/recording_studio_shareable/releases/tag/v0.5.0
 [0.4.0]: https://github.com/bowerbird-app/recording_studio_shareable/releases/tag/v0.4.0
 [0.3.0]: https://github.com/bowerbird-app/recording_studio_shareable/releases/tag/v0.3.0
 [0.2.3]: https://github.com/bowerbird-app/recording_studio_shareable/releases/tag/v0.2.3
