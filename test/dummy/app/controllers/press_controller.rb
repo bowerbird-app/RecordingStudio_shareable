@@ -2,7 +2,8 @@
 
 class PressController < ApplicationController
   def show
-    @page = Page.find_by!(title: "Getting Started")
+    @page = PageShareDemo.published_page
+    @recording = PageShareDemo.recording_for(@page)
     @payload = @page.share_payload
   end
 end

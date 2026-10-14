@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- `ShareButton` `when_unavailable:` accepts `:hide` (default) or `:disable`. Disabled buttons explain the Publishable state and do not include a URL.
+- Dummy app pins Publishable and Attachable, with an admin page list for published, draft, and scheduled pages.
+
 ## [0.3.0] - 2026-10-14
 
 ### Added

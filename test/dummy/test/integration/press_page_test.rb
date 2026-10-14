@@ -39,10 +39,11 @@ class PressPageTest < ActionDispatch::IntegrationTest
     assert_select "[aria-label='Share']", text: "Share"
     assert_select "[aria-label='Share'] svg", count: 0
     assert_includes response.body, "recording-studio-shareable--share"
-    assert_includes response.body, %(href="#{payload.url}")
+    assert_includes payload.url, "https://press.example/published/"
+    assert_includes response.body, %(value="#{payload.url}")
+    refute_includes response.body, "https://press.example/pages/#{@page.id}"
     assert_includes response.body, %(property="og:title")
-    assert_includes response.body, %(property="og:image")
-    assert_includes response.body, Page::PRESS_IMAGE_URL
+    assert_includes response.body, %(rel="canonical")
     refute_includes response.body, "Resolved payload"
     refute_includes response.body, "shareable_head_tags"
   end

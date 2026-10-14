@@ -77,8 +77,8 @@ class RecordingStudioTemplateTest < ActiveSupport::TestCase
     page_source = File.read(Rails.root.join("app/models/page.rb"))
 
     assert_includes page_source, "Capabilities::Shareable.to"
+    assert_includes page_source, "Capabilities::Publishable.to"
     assert_includes page_source, "public_url:"
-    refute_includes page_source, "publishable"
 
     assert RecordingStudio.capability_enabled?(:accessible, for: Workspace)
     refute RecordingStudio.capability_enabled?(:shareable, for: Workspace)
@@ -86,7 +86,7 @@ class RecordingStudioTemplateTest < ActiveSupport::TestCase
     refute RecordingStudio.capability_enabled?(:accessible, for: Page)
     refute RecordingStudio.capability_enabled?(:shareable, for: Folder)
     assert RecordingStudio.capability_enabled?(:shareable, for: Page)
-    refute RecordingStudio.capability_enabled?(:publishable, for: Page)
+    assert RecordingStudio.capability_enabled?(:publishable, for: Page)
     assert_equal [ "Page" ], RecordingStudio.configuration.enabled_recordable_types_for(:shareable)
     assert_includes ApplicationController.ancestors, RecordingStudio::UsesDefaultLayout
   end
