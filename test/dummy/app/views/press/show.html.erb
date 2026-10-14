@@ -1,0 +1,38 @@
+<% content_for :title, @payload.title %>
+<% content_for :head do %>
+  <%= shareable_head_tags(@page) %>
+<% end %>
+<% dummy_page_nav(title: "Press", back_url: root_path) %>
+
+<article id="press-article" class="mx-auto flex w-full max-w-2xl flex-col gap-6">
+  <img src="<%= Page::PRESS_IMAGE_PATH %>" alt="<%= Page::PRESS_IMAGE_ALT %>" class="w-full rounded-lg object-cover">
+
+  <div class="flex items-start justify-between gap-4">
+    <div class="min-w-0">
+      <%= render FlatPack::PageTitle::Component.new(
+        title: @payload.title,
+        subtitle: @payload.description,
+        variant: :h1
+      ) %>
+    </div>
+    <%= render RecordingStudioShareable::ShareButton::Component.new(payload: @payload, modal_id: "share-page") %>
+  </div>
+
+  <div class="flex flex-col gap-4 text-sm leading-6">
+    <p>
+      The studio is a single live room and a small control room, booked for sessions that need quiet
+      and a window onto the take.
+    </p>
+    <p>
+      Share this page when an editor needs the public link, the portrait, and a description that can
+      travel with the post.
+    </p>
+  </div>
+</article>
+
+<%= render RecordingStudioShareable::ShareModal::Component.new(
+  payload: @payload,
+  modal_id: "share-page",
+  image_src: Page::PRESS_IMAGE_PATH,
+  image_alt: Page::PRESS_IMAGE_ALT
+) %>
