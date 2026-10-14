@@ -7,12 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-10-14
+
+### Added
+- Opt-in `:shareable` capability, `SharePayload` URL resolver, destination URL builders, and `shareable_head_tags`.
+- FlatPack share sheet: share button, modal, copy link, and full-width LinkedIn, X, Facebook, and Email buttons. Native share is labelled Share and appears only when `navigator.share` exists.
+- Dummy press page at `/press`.
+
 ### Changed
 - Renamed the addon template to `recording_studio_shareable`.
-- Added the opt-in `:shareable` capability, `SharePayload` URL resolver, destination URL builders, and `shareable_head_tags`.
 - Removed the sample migration, sample configuration, and the engine mixin that applied extensions to every model.
-- Dummy app opts `Page` into Shareable and shows a public press page at `/press` with the share sheet.
-- Share destinations are full-width service-name buttons. Native share uses the same treatment and is labelled Share.
 - Dummy and root GitHub tags: Recording Studio `v4.2.1` → `v4.2.2`.
 
 ### Upgrade notes
@@ -120,7 +124,8 @@ New addons copied from this template are born on Recording Studio 4.x.
 - Comprehensive README and documentation
 - Basic test suite with Minitest
 
-[Unreleased]: https://github.com/bowerbird-app/recording_studio_shareable/compare/v0.2.3...HEAD
+[Unreleased]: https://github.com/bowerbird-app/recording_studio_shareable/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/bowerbird-app/recording_studio_shareable/releases/tag/v0.3.0
 [0.2.3]: https://github.com/bowerbird-app/recording_studio_shareable/releases/tag/v0.2.3
 [0.2.2]: https://github.com/bowerbird-app/recording_studio_shareable/releases/tag/v0.2.2
 [0.2.1]: https://github.com/bowerbird-app/recording_studio_shareable/releases/tag/v0.2.1
