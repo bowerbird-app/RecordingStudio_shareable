@@ -1,0 +1,17 @@
+<div data-controller="flat-pack--toasts-region">
+  <%= render FlatPack::Toasts::Region::Component.new(data: { "flat-pack--toasts-region-target": "container" }) %>
+  <div class="hidden" aria-hidden="true">
+    <template data-flat-pack--toasts-region-target="infoTemplate">
+      <%= render FlatPack::Toast::Component.new(text: "Template message", style: :info, timeout: 5000) %>
+    </template>
+    <template data-flat-pack--toasts-region-target="successTemplate">
+      <%= render FlatPack::Toast::Component.new(text: "Template message", style: :success, timeout: 5000) %>
+    </template>
+    <template data-flat-pack--toasts-region-target="warningTemplate">
+      <%= render FlatPack::Toast::Component.new(text: "Template message", style: :warning, timeout: 5000) %>
+    </template>
+    <template data-flat-pack--toasts-region-target="errorTemplate">
+      <%= render FlatPack::Toast::Component.new(text: "Template message", style: :danger, timeout: 5000) %>
+    </template>
+  </div>
+</div>

@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Renamed the addon template to `recording_studio_shareable`.
 - Added the opt-in `:shareable` capability, `SharePayload` URL resolver, destination URL builders, and `shareable_head_tags`.
 - Removed the sample migration, sample configuration, and the engine mixin that applied extensions to every model.
-- Dummy app opts `Page` into Shareable and shows the resolved payload at `/shareable`.
+- Dummy app opts `Page` into Shareable and shows a public press page at `/press` with the share sheet.
 - Dummy and root GitHub tags: Recording Studio `v4.2.1` → `v4.2.2`.
 
 ### Upgrade notes

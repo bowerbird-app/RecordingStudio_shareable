@@ -26,6 +26,16 @@ module RecordingStudioShareable
       end
     end
 
+    config.autoload_paths << root.join("app/components")
+
+    initializer "recording_studio_shareable.assets" do |app|
+      app.config.assets.paths << root.join("app/javascript") if app.config.respond_to?(:assets)
+    end
+
+    initializer "recording_studio_shareable.importmap", before: "importmap" do |app|
+      app.config.importmap.paths << root.join("config/importmap.rb") if app.config.respond_to?(:importmap)
+    end
+
     class << self
       def load_yaml_config(app)
         return unless app.respond_to?(:config_for)

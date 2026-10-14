@@ -98,11 +98,21 @@ When Publishable is enabled for that recordable, the helper calls `publishable_h
 
 Shareable distributes a URL. It does not call `RecordingStudioAccessible.authorized?`, and it does not make a draft reachable. If Publishable is enabled and `published_url` is blank or unsafe, sharing stays off even if the host also supplied a direct URL.
 
+## Share UI
+
+The gem renders the sheet with FlatPack primitives so it can move to FlatPack's share button later.
+
+- `RecordingStudioShareable::ShareButton::Component` opens the modal.
+- `RecordingStudioShareable::ShareModal::Component` shows the preview, copy field, device share, and destination icons.
+- `RecordingStudioShareable::CopyLink::Component` is a read-only `FlatPack::TextInput` with `quick_copy: true`. The copied toast comes from FlatPack.
+- `RecordingStudioShareable::ShareLinks::Component` builds LinkedIn, X, Facebook, and email buttons.
+- `recording-studio-shareable--share` reveals the device share button only when `navigator.share` exists.
+
+The dummy app opts `Page` into Shareable with a host `public_url` and leaves Publishable off. Sign in and open `/press` for the public page. `shareable_head_tags` render in that page's head. `Folder` stays unshared.
+
 ## Not built yet
 
-Share button, share menu, inline links, copy-link component, and Stimulus are later work. FlatPack is adding the share button.
-
-The dummy app opts `Page` into Shareable with a host `public_url` and leaves Publishable off. `Folder` stays unshared. Visit `/shareable` after signing in to see the resolved payload, plain destination links, `shareable_head_tags`, and the unavailable folder.
+FlatPack does not ship `navigator.share` itself. This gem's Stimulus controller covers that until a FlatPack share button replaces `ShareButton`.
 
 ## Dummy app pins
 
