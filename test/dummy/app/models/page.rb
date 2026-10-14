@@ -7,7 +7,12 @@ class Page < ApplicationRecord
 
   recording_studio_recordable label: "Page", root: false, allowed_parent_types: [ "Workspace", "Folder" ]
 
-  # Host public URL only. Publication rules stay outside this gem.
+  include RecordingStudio::Capabilities::Publishable.to(
+    schedule: true,
+    seo: true
+  )
+
+  # Host public URL is used only when Publishable is off. Published pages share published_url.
   include RecordingStudio::Capabilities::Shareable.to(
     public_url: ->(page) { "https://press.example/pages/#{page.id}" },
     title: PRESS_TITLE,

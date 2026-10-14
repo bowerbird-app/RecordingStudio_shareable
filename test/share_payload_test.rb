@@ -64,9 +64,11 @@ class SharePayloadTest < Minitest::Test
 
   def test_missing_public_url_is_unavailable
     enable_shareable
+    payload = payload_for(@page)
 
-    refute_predicate payload_for(@page), :available?
-    assert_empty payload_for(@page).destination_urls
+    refute_predicate payload, :available?
+    assert_empty payload.destination_urls
+    assert_equal RecordingStudioShareable::SharePayload::MISSING_URL_REASON, payload.unavailable_reason
   end
 
   def test_publishable_published_url_wins_and_host_url_is_not_called
@@ -149,6 +151,75 @@ class SharePayloadTest < Minitest::Test
     payload = RecordingStudioShareable::SharePayload.for(Probe::Unshared.new)
 
     refute_predicate payload, :available?
+    assert_nil payload.unavailable_reason
+  end
+
+  def test_available_payload_has_no_unavailable_reason
+    payload = payload_for(@page)
+
+    assert_predicate payload, :available?
+    assert_nil payload.unavailable_reason
+  end
+
+  def test_draft_and_unpublished_ask_publishable_for_the_reason
+    enable_shareable(public_url: "https://host.example/secret")
+    @page.published_url = nil
+
+    with_publishable do
+      stub_publishable_state(draft: true)
+      assert_equal RecordingStudioShareable::SharePayload::PUBLISH_REASON, payload_for(@page).unavailable_reason
+
+      stub_publishable_state(draft: false, unpublished: true)
+      assert_equal RecordingStudioShareable::SharePayload::PUBLISH_REASON, fresh_payload.unavailable_reason
+    end
+  end
+
+  def test_scheduled_reason_uses_publishable_predicate_and_publish_at
+    enable_shareable(public_url: "https://host.example/secret")
+    @page.published_url = nil
+    @page.current_publishable = Struct.new(:publish_at, :effective_time_zone).new(
+      Time.utc(2026, 11, 3, 15, 0, 0),
+      "UTC"
+    )
+    stub_publishable_state(scheduled: true)
+
+    with_publishable do
+      payload = payload_for(@page)
+
+      refute_predicate payload, :available?
+      assert_nil payload.url
+      Time.use_zone("UTC") do
+        assert_equal "Scheduled for Tuesday 3 November at 3:00 PM. You can share it then.",
+                     payload_for(@page).unavailable_reason
+      end
+      Time.use_zone("America/New_York") do
+        assert_equal "Scheduled for Tuesday 3 November at 10:00 AM. You can share it then.",
+                     fresh_payload.unavailable_reason
+      end
+    end
+  end
+
+  def test_future_publish_at_is_not_scheduled_unless_publishable_says_so
+    enable_shareable
+    @page.published_url = nil
+    @page.current_publishable = Struct.new(:publish_at, :effective_time_zone).new(Time.utc(2026, 12, 1), "UTC")
+    stub_publishable_state(scheduled: false, draft: true)
+
+    with_publishable do
+      assert_equal RecordingStudioShareable::SharePayload::PUBLISH_REASON, payload_for(@page).unavailable_reason
+    end
+  end
+
+  def test_publishable_without_a_state_reports_a_missing_url
+    enable_shareable(public_url: "https://host.example/secret")
+    @page.published_url = nil
+
+    with_publishable do
+      payload = payload_for(@page)
+
+      refute_predicate payload, :available?
+      assert_equal RecordingStudioShareable::SharePayload::MISSING_URL_REASON, payload.unavailable_reason
+    end
   end
 
   def test_title_and_description_fallbacks
@@ -238,6 +309,22 @@ class SharePayloadTest < Minitest::Test
 
   def enable_shareable(**)
     Probe::Page.include(RecordingStudio::Capabilities::Shareable.to(**))
+  end
+
+  def stub_publishable_state(scheduled: false, draft: false, unpublished: false)
+    @publishable_state ||= { scheduled: false, draft: false, unpublished: false }
+    @publishable_state.merge!(scheduled: scheduled, draft: draft, unpublished: unpublished)
+    return if @publishable_predicates
+
+    state = @publishable_state
+    @page.define_singleton_method(:scheduled?) { state[:scheduled] }
+    @page.define_singleton_method(:draft?) { state[:draft] }
+    @page.define_singleton_method(:unpublished?) { state[:unpublished] }
+    @publishable_predicates = true
+  end
+
+  def fresh_payload
+    RecordingStudioShareable::SharePayload.for(@page)
   end
 
   def with_publishable(&block)

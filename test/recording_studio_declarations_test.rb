@@ -90,7 +90,7 @@ class RecordingStudioDeclarationsTest < ActiveSupport::TestCase
     refute RecordingStudio.capability_enabled?(:shareable, for: "Workspace")
     refute RecordingStudio.capability_enabled?(:shareable, for: "Folder")
     assert RecordingStudio.capability_enabled?(:shareable, for: "Page")
-    refute RecordingStudio.capability_enabled?(:publishable, for: "Page")
+    assert RecordingStudio.capability_enabled?(:publishable, for: "Page")
   end
 
   private

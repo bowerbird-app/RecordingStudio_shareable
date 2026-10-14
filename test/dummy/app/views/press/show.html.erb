@@ -1,6 +1,6 @@
 <% content_for :title, @payload.title %>
 <% content_for :head do %>
-  <%= shareable_head_tags(@page) %>
+  <%= shareable_head_tags(@recording) %>
 <% end %>
 <% dummy_page_nav(title: "Press", back_url: root_path) %>
 
@@ -25,7 +25,8 @@
     </p>
     <p>
       Share this page when an editor needs the public link, the portrait, and a description that can
-      travel with the post.
+      travel with the post. The <%= link_to "page list", pages_path, class: "underline" %> shows the
+      same button while a page is still a draft or scheduled.
     </p>
   </div>
 </article>

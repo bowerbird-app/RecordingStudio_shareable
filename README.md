@@ -4,7 +4,7 @@ Opt-in sharing for Recording Studio recordables. A host chooses which types can 
 
 Publishable decides whether a recordable is public. Shareable only distributes an eligible URL. It does not grant access, and it does not duplicate publication rules.
 
-This phase has no share button, menu, or Stimulus controller. FlatPack is adding a share button. `FlatPack::TextInput` and `FlatPack::TextArea` already support `quick_copy: true`. FlatPack has no `navigator.share` support yet.
+The share sheet is built from FlatPack's button, modal, tooltip, and text input. `FlatPack::TextInput` supports `quick_copy: true`. FlatPack has no `navigator.share` support yet, so this gem's Stimulus controller covers the device share button.
 
 ## Install
 
@@ -41,7 +41,7 @@ end
 `RecordingStudioShareable::SharePayload.for(recordable_or_recording)` returns the share decision.
 
 1. The recordable type must have Shareable enabled. Otherwise the payload is unavailable.
-2. If Publishable is enabled for that type, the URL is `published_url` and nothing else. Drafts, scheduled records, and unpublished records return nil from Publishable, and Shareable does not fall back to another URL.
+2. If Publishable is enabled for that type, the URL is `published_url` and nothing else. Drafts, scheduled records, and unpublished records return nil from Publishable, and Shareable does not fall back to another URL. `payload.unavailable_reason` asks Publishable `scheduled?`, `draft?`, and `unpublished?` instead of reimplementing those windows. A draft or unpublished page says "Publish this page to share it". A scheduled page says "Scheduled for Tuesday 20 October at 9:00 AM. You can share it then.", formatting that publishable's `publish_at` in `Time.zone` with `I18n`. Anything else that is still unavailable, including a missing host URL when Publishable is off, says "This page has no public URL." An available payload has no reason.
 3. Otherwise Shareable calls the host `public_url` callable from `.to`, from `SharePayload.for(..., public_url:)`, or from configuration.
 4. Relative paths (starting with `/`) are prefixed with `public_base_url`. Absolute `http` and `https` URLs are left as they are.
 5. Blank values, non-http(s) values, and URLs whose path or query contains `active_storage`, `publishable/preview`, or `recording_studio` are rejected. Preview and admin routes are never share links.
@@ -102,13 +102,13 @@ Shareable distributes a URL. It does not call `RecordingStudioAccessible.authori
 
 The gem renders the sheet with FlatPack primitives so it can move to FlatPack's share button later.
 
-- `RecordingStudioShareable::ShareButton::Component` opens the modal.
+- `RecordingStudioShareable::ShareButton::Component` opens the modal. `when_unavailable:` defaults to `:hide`, which renders nothing. `:disable` renders a disabled FlatPack button and a FlatPack tooltip with `unavailable_reason`. The disabled control has `aria-disabled`, stays reachable from the keyboard, points at the tooltip with `aria-describedby`, and contains no URL.
 - `RecordingStudioShareable::ShareModal::Component` shows the preview, copy field, device share, and service buttons.
 - `RecordingStudioShareable::CopyLink::Component` is a read-only `FlatPack::TextInput` with `quick_copy: true`. The copied toast comes from FlatPack.
 - `RecordingStudioShareable::ShareLinks::Component` builds LinkedIn, X, Facebook, and email buttons.
 - `recording-studio-shareable--share` reveals the device share button only when `navigator.share` exists.
 
-The dummy app opts `Page` into Shareable with a host `public_url` and leaves Publishable off. Sign in and open `/press` for the public page. `shareable_head_tags` render in that page's head. `Folder` stays unshared.
+The dummy app opts `Page` into Shareable and Publishable. Sign in and open `/press` for the public page. `shareable_head_tags` defer to Publishable there. `/pages` is an admin list of a published page, a draft, and a scheduled page, each with the share button in `:disable` mode. `Folder` stays unshared.
 
 ## Not built yet
 
@@ -123,8 +123,10 @@ The dummy app pins these GitHub tags:
 | RecordingStudio | dummy GitHub tag `v4.5.0` |
 | Accessible | dummy GitHub tag `v0.15.0` |
 | Root Switchable | dummy GitHub tag `v0.9.0` |
-| FlatPack | dummy GitHub tag `v0.1.196` |
+| FlatPack | dummy GitHub tag `v0.1.213` |
+| Publishable | dummy GitHub tag `v0.8.1` |
+| Attachable | dummy GitHub tag `v0.15.0` |
 
-Publishable is not a dependency of this gem. The dummy app does not bundle it yet.
+Publishable is not a dependency of this gem. The dummy app bundles it, with Attachable, so the page list can show real publish states. FlatPack is pinned to `v0.1.213` because Attachable requires that floor. Accessible stays on dummy GitHub tag `v0.15.0`.
 
 Sign in to the dummy app with `admin@admin.com` / `Password`.

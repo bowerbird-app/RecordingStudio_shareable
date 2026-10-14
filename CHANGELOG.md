@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-10-14
+
+### Added
+- `ShareButton` `when_unavailable:` accepts `:hide` (default) or `:disable`. Disabled buttons explain the Publishable state and do not include a URL.
+- Dummy app pins Publishable and Attachable, with an admin page list for published, draft, and scheduled pages.
+
+### Changed
+- A scheduled page's unavailable reason is "Scheduled for {date time}. You can share it then.", formatted from `publish_at` in `Time.zone` with `I18n`.
+
 ## [0.3.0] - 2026-10-14
 
 ### Added
@@ -124,7 +133,8 @@ New addons copied from this template are born on Recording Studio 4.x.
 - Comprehensive README and documentation
 - Basic test suite with Minitest
 
-[Unreleased]: https://github.com/bowerbird-app/recording_studio_shareable/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/bowerbird-app/recording_studio_shareable/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/bowerbird-app/recording_studio_shareable/releases/tag/v0.4.0
 [0.3.0]: https://github.com/bowerbird-app/recording_studio_shareable/releases/tag/v0.3.0
 [0.2.3]: https://github.com/bowerbird-app/recording_studio_shareable/releases/tag/v0.2.3
 [0.2.2]: https://github.com/bowerbird-app/recording_studio_shareable/releases/tag/v0.2.2

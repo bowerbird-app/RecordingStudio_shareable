@@ -1,0 +1,42 @@
+<% content_for :title, "Pages" %>
+<% dummy_page_nav(title: "Pages", back_url: root_path) %>
+
+<div id="page-list" class="mx-auto flex w-full max-w-3xl flex-col gap-6">
+  <div class="flex items-end justify-between gap-4">
+    <%= render FlatPack::PageTitle::Component.new(
+      title: "Pages",
+      subtitle: "Sharing opens when a page is public.",
+      variant: :h1
+    ) %>
+    <%= render FlatPack::Button::Component.new(
+      text: "Public page",
+      style: :ghost,
+      size: :md,
+      href: press_path
+    ) %>
+  </div>
+
+  <% table = FlatPack::Table::Component.new(data: @rows, min_width: :sm, aria: { label: "Pages" }) %>
+  <% table.column(title: "Page") { |row| row.page.title } %>
+  <% table.column(title: "Status") { |row|
+       render FlatPack::Badge::Component.new(text: row.status, style: row.badge, size: :sm)
+     } %>
+  <% table.column(title: "Share") { |row|
+       content_tag(:div, id: "share-row-#{row.key}") do
+         render RecordingStudioShareable::ShareButton::Component.new(
+           payload: row.payload,
+           modal_id: "share-#{row.key}",
+           when_unavailable: :disable
+         )
+       end
+     } %>
+  <%= render table %>
+
+  <% @rows.each do |row| %>
+    <% next unless row.payload.available? %>
+    <%= render RecordingStudioShareable::ShareModal::Component.new(
+      payload: row.payload,
+      modal_id: "share-#{row.key}"
+    ) %>
+  <% end %>
+</div>
