@@ -188,7 +188,14 @@ class SharePayloadTest < Minitest::Test
 
       refute_predicate payload, :available?
       assert_nil payload.url
-      assert_equal "Scheduled for November 3, 2026; sharing opens then", payload.unavailable_reason
+      Time.use_zone("UTC") do
+        assert_equal "Scheduled for Tuesday 3 November at 3:00 PM. You can share it then.",
+                     payload_for(@page).unavailable_reason
+      end
+      Time.use_zone("America/New_York") do
+        assert_equal "Scheduled for Tuesday 3 November at 10:00 AM. You can share it then.",
+                     fresh_payload.unavailable_reason
+      end
     end
   end
 

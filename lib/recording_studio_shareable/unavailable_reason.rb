@@ -39,23 +39,29 @@ module RecordingStudioShareable
     end
 
     def scheduled_reason
-      date = scheduled_on
-      return "Scheduled; sharing opens then" if date.blank?
+      stamp = scheduled_stamp
+      return "Scheduled. You can share it then." if stamp.blank?
 
-      "Scheduled for #{date}; sharing opens then"
+      "Scheduled for #{stamp}. You can share it then."
     end
 
-    def scheduled_on
+    def scheduled_stamp
       source = schedule_publishable
       return if source.nil? || !source.respond_to?(:publish_at)
 
       time = source.publish_at
       return if time.blank?
 
-      time = time.in_time_zone(source.effective_time_zone) if zoned_publishable?(source)
-      "#{time.strftime('%B')} #{time.day}, #{time.year}"
+      zoned = time.in_time_zone(Time.zone)
+      minutes = zoned.min.to_s.rjust(2, "0")
+      I18n.l(zoned, format: "%A #{zoned.day} %B at #{twelve_hour(zoned)}:#{minutes} %p")
     rescue StandardError
       nil
+    end
+
+    def twelve_hour(time)
+      hour = time.hour % 12
+      hour.zero? ? 12 : hour
     end
 
     def schedule_publishable
@@ -87,10 +93,6 @@ module RecordingStudioShareable
       return conditions unless RecordingStudioPublishable::TrashedAt.respond_to?(:merge_active)
 
       RecordingStudioPublishable::TrashedAt.merge_active(conditions)
-    end
-
-    def zoned_publishable?(source)
-      source.respond_to?(:effective_time_zone) && source.effective_time_zone.present?
     end
   end
 end

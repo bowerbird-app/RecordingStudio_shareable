@@ -33,7 +33,7 @@ class PagesShareTest < ActionDispatch::IntegrationTest
     refute_share_url draft
 
     scheduled = css_select("#share-row-scheduled").to_html
-    assert_includes scheduled, "Scheduled for November 3, 2026; sharing opens then"
+    assert_includes scheduled, "Scheduled for Tuesday 3 November at 3:00 PM. You can share it then."
     assert_includes scheduled, 'aria-disabled="true"'
     assert_includes scheduled, 'tabindex="0"'
     refute_includes scheduled, "href="
