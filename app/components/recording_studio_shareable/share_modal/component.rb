@@ -2,7 +2,7 @@
 
 module RecordingStudioShareable
   module ShareModal
-    # Share sheet: preview, muted URL, then the copy button and service buttons.
+    # Share sheet: preview, then the copy button and service buttons.
     class Component < ViewComponent::Base
       def initialize(payload:, modal_id:, image_src: nil, image_alt: "")
         super()
@@ -29,7 +29,7 @@ module RecordingStudioShareable
 
       def sheet_body
         content_tag(:div, class: "flex flex-col gap-5", **controller_attributes) do
-          safe_join([preview_block, actions])
+          safe_join([preview, actions])
         end
       end
 
@@ -44,24 +44,10 @@ module RecordingStudioShareable
         }
       end
 
-      def preview_block
-        content_tag(:div) do
-          safe_join([preview, share_url])
-        end
-      end
-
       def preview
         content_tag(:div, class: "flex items-center gap-4") do
           safe_join([preview_image, preview_copy].compact)
         end
-      end
-
-      def share_url
-        content_tag(
-          :p,
-          @payload.url,
-          class: "mt-3 break-all text-sm text-[var(--surface-muted-content-color)]"
-        )
       end
 
       def preview_image
@@ -80,7 +66,7 @@ module RecordingStudioShareable
       end
 
       def actions
-        content_tag(:div, class: "flex flex-col gap-2") do
+        content_tag(:div, class: "mt-6 flex flex-col gap-2") do
           safe_join([copy_field, native_share, destinations])
         end
       end

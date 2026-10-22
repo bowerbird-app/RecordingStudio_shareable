@@ -29,8 +29,12 @@ class PressPageTest < ActionDispatch::IntegrationTest
     assert_select "[aria-label='Share this page'][data-modal-id='share-page'][aria-haspopup='dialog']"
     assert_select "#share-page[role='dialog'], #share-page [role='dialog']"
     assert_select "input[name='share_url']", count: 0
-    assert_select "p", text: payload.url
-    assert_select "button[aria-label='Copy link'][data-fp-style='secondary'].fp-button.fp-copy-button"
+    assert_select "p", text: payload.url, count: 0
+    assert_select "button[aria-label='Copy link'][data-fp-style='primary'].fp-button.fp-copy-button"
+    assert_select "[aria-label='Share on LinkedIn'][data-fp-style='secondary']"
+    assert_select "[aria-label='Share on X'][data-fp-style='secondary']"
+    assert_select "[aria-label='Share on Facebook'][data-fp-style='secondary']"
+    assert_select "[aria-label='Share by email'][data-fp-style='secondary']"
     assert_select "[data-flat-pack--clipboard-text-value=?]", payload.url
     assert_select "[data-flat-pack--clipboard-copied-label-value='Copied']"
     assert_select "[data-flat-pack--clipboard-target='label']", text: "Copy link"
