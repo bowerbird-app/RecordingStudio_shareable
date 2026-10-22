@@ -66,7 +66,7 @@ module RecordingStudioShareable
       end
 
       def actions
-        content_tag(:div, class: "flex flex-col gap-2") do
+        content_tag(:div, class: "mt-6 flex flex-col gap-2") do
           safe_join([copy_field, native_share, destinations])
         end
       end

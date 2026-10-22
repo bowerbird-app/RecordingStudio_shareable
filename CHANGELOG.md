@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.5.1] - 2026-10-22
 
 ### Changed
-- The share sheet no longer prints the URL under the preview card. Copy link is the primary button. LinkedIn, X, Facebook, and email stay secondary.
+- The share sheet no longer prints the URL under the preview card. Copy link is the primary button, with space above that button stack. LinkedIn, X, Facebook, and email stay secondary.
 - Development Ruby pin `.ruby-version` `3.3.6` → `3.3.12`. Current ubuntu-26.04 runners no longer publish the 3.3.6 setup-ruby build, so lint and security jobs could not start.
 
 ### Upgrade notes

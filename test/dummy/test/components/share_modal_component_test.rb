@@ -21,6 +21,8 @@ class ShareModalComponentTest < ActiveSupport::TestCase
     copy = fragment.at_css("button[aria-label='Copy link']")
 
     assert_equal "primary", copy["data-fp-style"]
+    stack = copy.ancestors.find { |node| node["class"].to_s.include?("mt-6") }
+    assert_includes stack["class"], "mt-6"
     assert_equal @published.url, fragment.at_css("[data-flat-pack--clipboard-text-value]")["data-flat-pack--clipboard-text-value"]
     assert_nil fragment.at_css("p.break-all")
     assert_empty fragment.css("p").select { |node| node.text == @published.url }
