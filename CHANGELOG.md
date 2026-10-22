@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.1] - 2026-10-22
+
+### Changed
+- The share sheet no longer prints the URL under the preview card. Copy link is the primary button. LinkedIn, X, Facebook, and email stay secondary.
+
+### Upgrade notes
+- Hosts that mount the gem share sheet get this layout on upgrade. No configuration change. A host that replaced `ShareModal` or `CopyLink` should drop a custom URL line under the preview and set the copy button to `style: :primary` to match.
+
 ## [0.5.0] - 2026-10-14
 
 ### Changed
@@ -139,7 +147,8 @@ New addons copied from this template are born on Recording Studio 4.x.
 - Comprehensive README and documentation
 - Basic test suite with Minitest
 
-[Unreleased]: https://github.com/bowerbird-app/recording_studio_shareable/compare/v0.5.0...HEAD
+[Unreleased]: https://github.com/bowerbird-app/recording_studio_shareable/compare/v0.5.1...HEAD
+[0.5.1]: https://github.com/bowerbird-app/recording_studio_shareable/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/bowerbird-app/recording_studio_shareable/releases/tag/v0.5.0
 [0.4.0]: https://github.com/bowerbird-app/recording_studio_shareable/releases/tag/v0.4.0
 [0.3.0]: https://github.com/bowerbird-app/recording_studio_shareable/releases/tag/v0.3.0

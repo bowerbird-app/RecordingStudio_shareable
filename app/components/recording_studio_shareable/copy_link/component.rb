@@ -16,7 +16,7 @@ module RecordingStudioShareable
           render FlatPack::CopyButton::Component.new(
             text: @url,
             label: LABEL,
-            style: :secondary,
+            style: :primary,
             size: :md
           )
         end
