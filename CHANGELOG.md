@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - The share sheet no longer prints the URL under the preview card. Copy link is the primary button. LinkedIn, X, Facebook, and email stay secondary.
+- Development Ruby pin `.ruby-version` `3.3.6` → `3.3.12`. Current ubuntu-26.04 runners no longer publish the 3.3.6 setup-ruby build, so lint and security jobs could not start.
 
 ### Upgrade notes
 - Hosts that mount the gem share sheet get this layout on upgrade. No configuration change. A host that replaced `ShareModal` or `CopyLink` should drop a custom URL line under the preview and set the copy button to `style: :primary` to match.
