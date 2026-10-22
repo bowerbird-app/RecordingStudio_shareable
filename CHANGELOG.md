@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.5.1] - 2026-10-22
+## [0.6.0] - 2026-10-22
 
 ### Changed
 - The share sheet no longer prints the URL under the preview card. Copy link is the primary button, with space above that button stack. LinkedIn, X, Facebook, and email stay secondary.
@@ -148,8 +148,8 @@ New addons copied from this template are born on Recording Studio 4.x.
 - Comprehensive README and documentation
 - Basic test suite with Minitest
 
-[Unreleased]: https://github.com/bowerbird-app/recording_studio_shareable/compare/v0.5.1...HEAD
-[0.5.1]: https://github.com/bowerbird-app/recording_studio_shareable/compare/v0.5.0...v0.5.1
+[Unreleased]: https://github.com/bowerbird-app/recording_studio_shareable/compare/v0.6.0...HEAD
+[0.6.0]: https://github.com/bowerbird-app/recording_studio_shareable/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/bowerbird-app/recording_studio_shareable/releases/tag/v0.5.0
 [0.4.0]: https://github.com/bowerbird-app/recording_studio_shareable/releases/tag/v0.4.0
 [0.3.0]: https://github.com/bowerbird-app/recording_studio_shareable/releases/tag/v0.3.0
