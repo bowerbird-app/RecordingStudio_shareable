@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.1] - 2026-10-26
+
+### Security
+- Gemspec `view_component` `~> 4.12.0` → `>= 4.14`, `< 5`, the same range as FlatPack 0.1.311. view_component `<= 4.12.0` can leak content between renders on a reused instance ([GHSA-8qw7-6phv-7q6p](https://github.com/advisories/GHSA-8qw7-6phv-7q6p)).
+
+### Changed
+- Dummy FlatPack pin `v0.1.235` → `v0.1.311`.
+- Root and dummy lockfiles: `view_component` `4.12.0` → `4.19.0`, `crass` `1.0.7` → `1.0.8`.
+
+### Upgrade notes
+- Hosts must resolve `view_component` `>= 4.14` and `< 5`. view_component 4.14 raises `ViewComponent::ReusedInstanceError` when the same component instance is rendered again. This gem creates a new instance for each render and does not call `ExperimentallyCacheable` (removed in view_component 4.18).
+- The dummy app stays on Recording Studio `v4.5.0` and Root Switchable `v0.9.0`. Those releases still pass removed FlatPack 0.1.311 keywords (`PageNav` `back_icon` / `anchor_label`, Card `style:`). The dummy overrides the default layout partial and the root-switch page, and passes Card `background:` / `border:` instead of `style:`. Hosts on those older engines need the same call-site updates, or a newer engine release, when they take FlatPack 0.1.311. No database change.
+
 ## [0.6.0] - 2026-10-22
 
 ### Changed
@@ -148,7 +161,8 @@ New addons copied from this template are born on Recording Studio 4.x.
 - Comprehensive README and documentation
 - Basic test suite with Minitest
 
-[Unreleased]: https://github.com/bowerbird-app/recording_studio_shareable/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/bowerbird-app/recording_studio_shareable/compare/v0.6.1...HEAD
+[0.6.1]: https://github.com/bowerbird-app/recording_studio_shareable/compare/v0.6.0...v0.6.1
 [0.6.0]: https://github.com/bowerbird-app/recording_studio_shareable/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/bowerbird-app/recording_studio_shareable/releases/tag/v0.5.0
 [0.4.0]: https://github.com/bowerbird-app/recording_studio_shareable/releases/tag/v0.4.0
