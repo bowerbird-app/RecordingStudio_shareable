@@ -82,6 +82,7 @@ PATH
   remote: ../..
   specs:
     recording_studio_shareable (0.6.1)
+      flat_pack (>= 0.1.311)
       rails (~> 8.1.0)
       recording_studio (~> 4.2)
       view_component (>= 4.14, < 5)
@@ -491,7 +492,7 @@ DEPENDENCIES
   bundler-audit
   debug
   devise
-  flat_pack!
+  flat_pack (>= 0.1.311)!
   image_processing (~> 2.2)
   importmap-rails
   jbuilder

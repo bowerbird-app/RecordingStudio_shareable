@@ -17,6 +17,7 @@ class RecordingStudioShareableTest < Minitest::Test
     assert_includes gemspec, 'spec.add_dependency "recording_studio", "~> 4.2"'
     assert_includes gemspec, 'spec.add_dependency "view_component", ">= 4.14", "< 5"'
     refute_includes gemspec, 'spec.add_dependency "view_component", "~> 4.12.0"'
+    assert_includes gemspec, 'spec.add_dependency "flat_pack", ">= 0.1.311"'
   end
 
   def test_gemspec_excludes_cursor_config
@@ -53,7 +54,7 @@ class RecordingStudioShareableTest < Minitest::Test
     assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_cache", tag: "v0.5.0"'
     refute_includes gemfile, 'tag: "v0.6.0"'
     refute_includes gemfile, 'tag: "v0.5.1"'
-    assert_includes gemfile, 'github: "bowerbird-app/flatpack", tag: "v0.1.311"'
+    assert_includes gemfile, 'gem "flat_pack", ">= 0.1.311", github: "bowerbird-app/flatpack", tag: "v0.1.311"'
     refute_includes gemfile, 'tag: "v0.1.235"'
     refute_includes gemfile, 'tag: "v0.1.213"'
     assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_publishable", tag: "v0.8.1"'
