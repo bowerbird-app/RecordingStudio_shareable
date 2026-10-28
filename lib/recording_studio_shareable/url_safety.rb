@@ -4,6 +4,8 @@ require "cgi"
 require "uri"
 
 module RecordingStudioShareable
+  # Accepts only absolute http(s) share URLs. Relative paths are joined to
+  # public_base_url. Already-absolute URLs are left unchanged.
   module UrlSafety
     BLOCKED_FRAGMENTS = [
       "active_storage",

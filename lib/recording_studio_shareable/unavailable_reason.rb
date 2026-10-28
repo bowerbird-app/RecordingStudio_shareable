@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module RecordingStudioShareable
+  # Copy for a share control that cannot open. Publication state comes from
+  # Publishable's own predicates. This module only turns that state into a sentence.
   module UnavailableReason
     PUBLISH_REASON = "Publish this page to share it"
     MISSING_URL_REASON = "This page has no public URL."

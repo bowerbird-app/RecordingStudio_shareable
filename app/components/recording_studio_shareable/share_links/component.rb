@@ -2,6 +2,7 @@
 
 module RecordingStudioShareable
   module ShareLinks
+    # Full-width secondary buttons. Copy link stays the primary action.
     class Component < ViewComponent::Base
       LABELS = { linkedin: "LinkedIn", x: "X", facebook: "Facebook", email: "Email" }.freeze
 

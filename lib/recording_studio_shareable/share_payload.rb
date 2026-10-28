@@ -4,6 +4,8 @@ require_relative "share_payload_sources"
 require_relative "unavailable_reason"
 
 module RecordingStudioShareable
+  # Resolves the share URL, copy, and destination links for one recordable.
+  # Publishable decides whether a public URL exists. This object only distributes it.
   class SharePayload
     include SharePayloadSources
     include UnavailableReason

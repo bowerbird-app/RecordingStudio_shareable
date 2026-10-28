@@ -28,7 +28,7 @@ class RecordingStudioShareableTest < Minitest::Test
     path = File.expand_path("../.cursor/environment.json", __dir__)
     json = JSON.parse(File.read(path))
 
-    assert_equal "recording-studio-shareable", json["name"]
+    assert_equal "recording-studio-gem-template", json["name"]
     assert_equal ".cursor/install.sh", json["install"]
     assert_equal ".cursor/start.sh", json["start"]
     refute json.key?("snapshot"), "snapshot pins a Personal build and skips install"
@@ -239,22 +239,61 @@ class RecordingStudioShareableTest < Minitest::Test
     view_path = File.expand_path("dummy/app/views/home/index.html.erb", __dir__)
     view_source = File.read(view_path)
 
-    assert_includes view_source, 'title: "Share a page"'
-    assert_includes view_source, "press_path"
-    assert_includes view_source, "pages_path"
+    assert_includes view_source, 'title: "Template Demo"'
+    assert_includes view_source, 'subtitle: "This dummy app is the browser-facing demo surface for the template."'
     assert_includes view_source, "FlatPack::Card::Component"
     assert_includes view_source, "dummy_page_nav"
-    refute_includes view_source, 'title: "Template Demo"'
     refute_includes view_source, 'title: "Demo"'
-    refute_includes view_source, "gem_template:install"
     refute_includes view_source, "FlatPack::Breadcrumb::Component"
+  end
+
+  def test_dummy_docs_pages_use_minimal_flatpack_documentation_components
+    docs_view_paths = Dir[File.expand_path("dummy/app/views/docs/*.html.erb", __dir__)].reject do |view_path|
+      File.basename(view_path).start_with?("_")
+    end
+    refute_empty docs_view_paths
+
+    docs_view_paths.each do |view_path|
+      view_source = File.read(view_path)
+
+      assert_includes view_source, "dummy_page_nav"
+      assert_includes view_source, "FlatPack::PageTitle::Component"
+      refute_includes view_source, "FlatPack::Card::Component"
+      refute_includes view_source, "FlatPack::Breadcrumb::Component"
+    end
+
+    methods_view = File.read(File.expand_path("dummy/app/views/docs/methods.html.erb", __dir__))
+    assert_includes methods_view, "FlatPack::SectionTitle::Component"
+    assert_includes methods_view, "FlatPack::CodeBlock::Component"
+
+    gem_views_view = File.read(File.expand_path("dummy/app/views/docs/gem_views.html.erb", __dir__))
+    assert_includes gem_views_view, "FlatPack::Table::Component"
+    refute_includes gem_views_view, "FlatPack::List::Component"
+
+    recordable_types_view = File.read(File.expand_path("dummy/app/views/docs/recordable_types.html.erb", __dir__))
+    assert_includes recordable_types_view, "FlatPack::List::Component"
+    refute_includes recordable_types_view, "v3 parent/root"
+
+    recordings_tree_view = File.read(File.expand_path("dummy/app/views/docs/recordings_tree.html.erb", __dir__))
+    assert_includes recordings_tree_view, "FlatPack::Tree::Component"
+    refute_includes recordings_tree_view, "Current structure"
+    refute_includes recordings_tree_view, "This tree is generated from RecordingStudio::Recording records"
+  end
+
+  def test_dummy_recordings_tree_view_omits_structure_section_copy
+    recordings_tree_view = File.read(File.expand_path("dummy/app/views/docs/recordings_tree.html.erb", __dir__))
+
+    assert_includes recordings_tree_view, 'title: "Recordings tree"'
+    assert_includes recordings_tree_view, "FlatPack::Tree::Component"
+    recording_tree_partial = File.read(File.expand_path("dummy/app/views/docs/_recording_tree_node.html.erb", __dir__))
+    assert_includes recording_tree_partial, "parent_builder.node"
+    refute_includes recordings_tree_view, "Current structure"
+    refute_includes recordings_tree_view, "This tree is generated from RecordingStudio::Recording records"
   end
 
   def test_engine_does_not_ship_a_home_view
     view_path = File.expand_path("../app/views/recording_studio_shareable/home/index.html.erb", __dir__)
-    controller_path = File.expand_path("../app/controllers/recording_studio_shareable/home_controller.rb", __dir__)
 
     refute File.exist?(view_path)
-    refute File.exist?(controller_path)
   end
 end

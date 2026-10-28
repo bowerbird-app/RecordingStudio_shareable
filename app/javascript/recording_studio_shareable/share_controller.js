@@ -1,5 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 
+// Shows the device share action only when the browser offers navigator.share.
 export default class extends Controller {
   static targets = ["native"]
   static values = { url: String, title: String, text: String }

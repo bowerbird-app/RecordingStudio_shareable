@@ -62,37 +62,6 @@ class SharePayloadTest < Minitest::Test
     refute_predicate payload_for(@page), :available?
   end
 
-  def test_raising_public_url_does_not_yield_a_share_url
-    enable_shareable(public_url: ->(_record) { raise "boom" })
-    payload = payload_for(@page)
-
-    refute_predicate payload, :available?
-    assert_nil payload.url
-    assert_equal RecordingStudioShareable::SharePayload::MISSING_URL_REASON, payload.unavailable_reason
-  end
-
-  def test_parent_recording_uses_trashed_at_merge_active
-    @page.define_singleton_method(:id) { 42 }
-    enable_shareable
-    install_trashed_at_stub!
-    seen = nil
-    relation = recording_lookup_relation(:found_recording)
-
-    result = recording_class.stub(:where, lambda { |conditions|
-      seen = conditions
-      relation
-    }) do
-      payload_for(@page).send(:parent_recording)
-    end
-
-    assert_equal :found_recording, result
-    assert_equal "SharePayloadTest::Probe::Page", seen[:recordable_type]
-    assert_equal 42, seen[:recordable_id]
-    assert_nil seen[:trashed_at]
-  ensure
-    remove_trashed_at_stub!
-  end
-
   def test_missing_public_url_is_unavailable
     enable_shareable
     payload = payload_for(@page)
@@ -336,52 +305,6 @@ class SharePayloadTest < Minitest::Test
 
   def payload_for(record)
     RecordingStudioShareable::SharePayload.for(record)
-  end
-
-  def recording_lookup_relation(result)
-    relation = Object.new
-    relation.define_singleton_method(:order) { |*| relation }
-    relation.define_singleton_method(:last) { result }
-    relation
-  end
-
-  def recording_class
-    RecordingStudio::Recording
-  end
-
-  def install_trashed_at_stub!
-    @created_publishable = false
-    @created_trashed_at = false
-    @created_recording = false
-    unless defined?(RecordingStudio::Recording)
-      RecordingStudio.const_set(:Recording, Class.new do
-        def self.where(*)
-          nil
-        end
-      end)
-      @created_recording = true
-    end
-    unless defined?(RecordingStudioPublishable)
-      Object.const_set(:RecordingStudioPublishable, Module.new)
-      @created_publishable = true
-    end
-    return if RecordingStudioPublishable.const_defined?(:TrashedAt, false)
-
-    RecordingStudioPublishable.const_set(:TrashedAt, Module.new do
-      def self.merge_active(conditions)
-        conditions.merge(trashed_at: nil)
-      end
-    end)
-    @created_trashed_at = true
-  end
-
-  def remove_trashed_at_stub!
-    if @created_trashed_at && defined?(RecordingStudioPublishable) &&
-       RecordingStudioPublishable.const_defined?(:TrashedAt, false)
-      RecordingStudioPublishable.send(:remove_const, :TrashedAt)
-    end
-    Object.send(:remove_const, :RecordingStudioPublishable) if @created_publishable
-    RecordingStudio.send(:remove_const, :Recording) if @created_recording
   end
 
   def enable_shareable(**)

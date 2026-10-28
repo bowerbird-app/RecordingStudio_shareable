@@ -2,6 +2,7 @@
 
 module RecordingStudioShareable
   module CopyLink
+    # Full-width FlatPack copy button. Copied feedback is the button's own state.
     class Component < ViewComponent::Base
       LABEL = "Copy link"
 

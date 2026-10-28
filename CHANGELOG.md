@@ -10,14 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.6.1] - 2026-10-28
 
 ### Changed
-- Coverage reports are gitignored, not committed. Dummy home points at `/press` and `/pages`. The install generator no longer mounts a stub engine home route.
-- Dummy credentials keep the original `gem_template.api_key` placeholder. Template docs, dummy docs pages, and the nested dummy CI workflow are gone.
-- Root CI uses the `recording_studio_shareable_test` database name.
-- `crass` lockfile pin is `>= 1.0.8` (conservative update). `view_component` stays on `~> 4.12.0`.
+- Coverage reports are gitignored and no longer committed.
+- `crass` lockfile pin is `1.0.8` (conservative update).
 - Dummy `net-ssh` lockfile pin is `7.3.8` (conservative update).
+- Component tests cover Copy link, share destinations, and the hidden native share control.
 
 ### Upgrade notes
-- Hosts that already ran the install generator can leave their routes as they are. A new install no longer adds `mount RecordingStudioShareable::Engine`. Render `ShareButton` and `ShareModal` on host screens. No configuration change.
+- No configuration change.
 
 ## [0.6.0] - 2026-10-22
 
