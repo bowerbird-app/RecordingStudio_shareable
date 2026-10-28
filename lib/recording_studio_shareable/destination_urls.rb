@@ -3,7 +3,6 @@
 require "uri"
 
 module RecordingStudioShareable
-  # Standard share endpoints. No API credentials or SDKs.
   module DestinationUrls
     LINKEDIN = "https://www.linkedin.com/sharing/share-offsite/"
     X = "https://twitter.com/intent/tweet"

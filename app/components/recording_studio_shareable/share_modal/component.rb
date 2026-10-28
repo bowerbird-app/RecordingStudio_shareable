@@ -2,7 +2,6 @@
 
 module RecordingStudioShareable
   module ShareModal
-    # Share sheet: preview, then the copy button and service buttons.
     class Component < ViewComponent::Base
       def initialize(payload:, modal_id:, image_src: nil, image_alt: "")
         super()

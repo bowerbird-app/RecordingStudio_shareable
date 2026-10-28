@@ -9,17 +9,6 @@ module RecordingStudioShareable
 
       desc "Installs RecordingStudioShareable engine into your application"
 
-      class_option(
-        :mount_path,
-        type: :string,
-        default: "/recording_studio_shareable",
-        desc: "Route prefix used when mounting the engine"
-      )
-
-      def mount_engine
-        route %(mount RecordingStudioShareable::Engine, at: "#{options[:mount_path]}")
-      end
-
       def copy_initializer
         template "recording_studio_shareable_initializer.rb", "config/initializers/recording_studio_shareable.rb"
       end

@@ -2,8 +2,6 @@
 
 module RecordingStudioShareable
   module ShareButton
-    # Opens the share modal. FlatPack owns the button primitive so this can be
-    # swapped when FlatPack ships its own share button.
     class Component < ViewComponent::Base
       MODES = %i[hide disable].freeze
 

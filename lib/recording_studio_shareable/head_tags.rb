@@ -3,8 +3,6 @@
 require "action_view"
 
 module RecordingStudioShareable
-  # Hosts render these tags. When Publishable is enabled for the recordable,
-  # this defers to publishable_head_tags instead of emitting a second set.
   module HeadTags
     include ActionView::Helpers::TagHelper
     include ActionView::Helpers::OutputSafetyHelper

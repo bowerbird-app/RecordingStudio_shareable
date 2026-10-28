@@ -226,9 +226,6 @@ class RenameVerificationTest < Minitest::Test
   # completely replaced. They only run after a rename has occurred.
 
   def test_no_old_gem_template_references_in_ruby_files
-    # Skip if current name IS gem_template (nothing to check - hasn't been renamed yet)
-    skip if @gem_name == "gem_template"
-
     ruby_files = Dir.glob(File.join(@root, "**", "*.rb"))
     # Dummy app, this file, the rename-script identity pin, and the encrypted
     # credentials assertion keep the original template key on purpose.
@@ -247,8 +244,6 @@ class RenameVerificationTest < Minitest::Test
   end
 
   def test_no_old_gem_template_directories
-    skip if @gem_name == "gem_template"
-
     old_dirs = [
       File.join(@root, "lib", "gem_template"),
       File.join(@root, "app", "controllers", "gem_template"),
@@ -262,24 +257,18 @@ class RenameVerificationTest < Minitest::Test
   end
 
   def test_no_old_gemspec_file
-    skip if @gem_name == "gem_template"
-
     old_gemspec = File.join(@root, "gem_template.gemspec")
     refute File.exist?(old_gemspec),
            "Old gemspec file should not exist: #{old_gemspec}"
   end
 
   def test_no_old_main_lib_file
-    skip if @gem_name == "gem_template"
-
     old_lib = File.join(@root, "lib", "gem_template.rb")
     refute File.exist?(old_lib),
            "Old main lib file should not exist: #{old_lib}"
   end
 
   def test_readme_has_no_leftover_template_identity_after_rename
-    skip if @gem_name == "gem_template"
-
     content = File.read(File.join(@root, "README.md"))
     refute_includes content, "GemTemplate",
                     "README.md still contains leftover GemTemplate identity"
@@ -290,8 +279,6 @@ class RenameVerificationTest < Minitest::Test
   end
 
   def test_changelog_has_no_leftover_template_identity_after_rename
-    skip if @gem_name == "gem_template"
-
     content = File.read(File.join(@root, "CHANGELOG.md"))
     refute_includes content, "GemTemplate",
                     "CHANGELOG.md still contains leftover GemTemplate identity"
@@ -302,8 +289,6 @@ class RenameVerificationTest < Minitest::Test
   end
 
   def test_gemspec_homepage_has_no_leftover_template_identity_after_rename
-    skip if @gem_name == "gem_template"
-
     content = read_gemspec
     refute_includes content, "GemTemplate",
                     "Gemspec still contains leftover GemTemplate identity"

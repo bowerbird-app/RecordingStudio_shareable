@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.1] - 2026-10-28
+
+### Changed
+- Coverage reports are gitignored, not committed. Dummy home points at `/press` and `/pages`. The install generator no longer mounts a stub engine home route.
+- Dummy credentials keep the original `gem_template.api_key` placeholder. Template docs, dummy docs pages, and the nested dummy CI workflow are gone.
+- Root CI uses the `recording_studio_shareable_test` database name.
+- `crass` lockfile pin is `>= 1.0.8` (conservative update). `view_component` stays on `~> 4.12.0`.
+
+### Upgrade notes
+- Hosts that already ran the install generator can leave their routes as they are. A new install no longer adds `mount RecordingStudioShareable::Engine`. Render `ShareButton` and `ShareModal` on host screens. No configuration change.
+
 ## [0.6.0] - 2026-10-22
 
 ### Changed
@@ -148,7 +159,8 @@ New addons copied from this template are born on Recording Studio 4.x.
 - Comprehensive README and documentation
 - Basic test suite with Minitest
 
-[Unreleased]: https://github.com/bowerbird-app/recording_studio_shareable/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/bowerbird-app/recording_studio_shareable/compare/v0.6.1...HEAD
+[0.6.1]: https://github.com/bowerbird-app/recording_studio_shareable/compare/v0.6.0...v0.6.1
 [0.6.0]: https://github.com/bowerbird-app/recording_studio_shareable/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/bowerbird-app/recording_studio_shareable/releases/tag/v0.5.0
 [0.4.0]: https://github.com/bowerbird-app/recording_studio_shareable/releases/tag/v0.4.0

@@ -4,14 +4,9 @@ require "active_support/concern"
 
 module RecordingStudio
   module Capabilities
-    # Opt-in share metadata for one recordable type.
-    #
     #   include RecordingStudio::Capabilities::Shareable.to(
     #     public_url: ->(recordable) { recordable.public_path }
     #   )
-    #
-    # Loading the gem does not enable this. `.to` wraps
-    # RecordingStudio::Capabilities.include_for.
     module Shareable
       def self.to(**)
         RecordingStudio::Capabilities.include_for(:shareable, **) do |base|
