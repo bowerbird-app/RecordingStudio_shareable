@@ -14,9 +14,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `crass` lockfile pin is `1.0.8` (conservative update).
 - Dummy `net-ssh` lockfile pin is `7.3.8` (conservative update).
 - Component tests cover Copy link, share destinations, and the hidden native share control.
+- Gemspec `view_component` requirement is `>= 4.14, < 5` (was `~> 4.12.0`). Hosts must resolve ViewComponent 4.14 or newer (GHSA-8qw7-6phv-7q6p).
+- Dummy FlatPack pin `v0.1.235` → `v0.1.329`.
 
 ### Upgrade notes
-- No configuration change.
+- Require `view_component` `>= 4.14, < 5`. No other configuration change.
 
 ## [0.6.0] - 2026-10-22
 

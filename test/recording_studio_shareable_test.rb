@@ -15,6 +15,8 @@ class RecordingStudioShareableTest < Minitest::Test
     gemspec = File.read(File.expand_path("../recording_studio_shareable.gemspec", __dir__))
 
     assert_includes gemspec, 'spec.add_dependency "recording_studio", "~> 4.2"'
+    assert_includes gemspec, 'spec.add_dependency "view_component", ">= 4.14", "< 5"'
+    refute_includes gemspec, 'spec.add_dependency "view_component", "~> 4.12.0"'
   end
 
   def test_gemspec_excludes_cursor_config
@@ -51,7 +53,8 @@ class RecordingStudioShareableTest < Minitest::Test
     assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_cache", tag: "v0.5.0"'
     refute_includes gemfile, 'tag: "v0.6.0"'
     refute_includes gemfile, 'tag: "v0.5.1"'
-    assert_includes gemfile, 'github: "bowerbird-app/flatpack", tag: "v0.1.235"'
+    assert_includes gemfile, 'github: "bowerbird-app/flatpack", tag: "v0.1.329"'
+    refute_includes gemfile, 'tag: "v0.1.235"'
     refute_includes gemfile, 'tag: "v0.1.213"'
     assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_publishable", tag: "v0.8.1"'
     assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_attachable", tag: "v0.15.0"'
@@ -144,6 +147,12 @@ class RecordingStudioShareableTest < Minitest::Test
     refute_includes controller_source, "flat_pack_sidebar"
     refute File.exist?(File.expand_path("dummy/app/views/layouts/flat_pack_sidebar.html.erb", __dir__))
     refute File.exist?(File.expand_path("dummy/app/views/layouts/flat_pack/_sidebar.html.erb", __dir__))
+
+    layout = File.read(File.expand_path("dummy/app/views/recording_studio/shared/_default_layout.html.erb", __dir__))
+    assert_includes layout, "page_nav.with_back"
+    assert_includes layout, "page_nav.with_item"
+    refute_includes layout, "right_slot"
+    refute_includes layout, "back_icon:"
   end
 
   def test_dummy_login_layout_keeps_flatpack_assets_without_tight_main_offset
@@ -211,7 +220,8 @@ class RecordingStudioShareableTest < Minitest::Test
 
     assert_includes readme, "RecordingStudio"
     assert_includes readme, "dummy GitHub tag `v4.5.0`"
-    assert_includes readme, "dummy GitHub tag `v0.1.235`"
+    assert_includes readme, "dummy GitHub tag `v0.1.329`"
+    refute_includes readme, "dummy GitHub tag `v0.1.235`"
     refute_includes readme, "dummy GitHub tag `v0.1.213`"
     refute_includes readme, "dummy GitHub tag `v0.1.196`"
     assert_includes readme, "dummy GitHub tag `v0.8.1`"
