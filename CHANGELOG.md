@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.1] - 2026-10-28
+
+### Changed
+- Coverage reports are gitignored and no longer committed.
+- `crass` lockfile pin is `1.0.8` (conservative update).
+- Dummy `net-ssh` lockfile pin is `7.3.8` (conservative update).
+- Component tests cover Copy link, share destinations, and the hidden native share control.
+- Gemspec `view_component` requirement is `>= 4.14, < 5` (was `~> 4.12.0`). Hosts must resolve ViewComponent 4.14 or newer (GHSA-8qw7-6phv-7q6p).
+- Dummy FlatPack pin `v0.1.235` → `v0.1.329`.
+
+### Upgrade notes
+- Require `view_component` `>= 4.14, < 5`. No other configuration change.
+
 ## [0.6.0] - 2026-10-22
 
 ### Changed
@@ -148,7 +161,8 @@ New addons copied from this template are born on Recording Studio 4.x.
 - Comprehensive README and documentation
 - Basic test suite with Minitest
 
-[Unreleased]: https://github.com/bowerbird-app/recording_studio_shareable/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/bowerbird-app/recording_studio_shareable/compare/v0.6.1...HEAD
+[0.6.1]: https://github.com/bowerbird-app/recording_studio_shareable/compare/v0.6.0...v0.6.1
 [0.6.0]: https://github.com/bowerbird-app/recording_studio_shareable/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/bowerbird-app/recording_studio_shareable/releases/tag/v0.5.0
 [0.4.0]: https://github.com/bowerbird-app/recording_studio_shareable/releases/tag/v0.4.0

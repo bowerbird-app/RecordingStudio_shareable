@@ -33,6 +33,22 @@ class ShareModalComponentTest < ActiveSupport::TestCase
     assert_equal "secondary", fragment.at_css("[aria-label='Share by email']")["data-fp-style"]
   end
 
+  test "native share stays hidden until the stimulus controller reveals it" do
+    html = render_inline(modal).to_html
+    fragment = Nokogiri::HTML.fragment(html)
+    sheet = fragment.at_css("[data-controller='recording-studio-shareable--share']")
+    native = fragment.at_css("[data-recording-studio-shareable--share-target='native']")
+    share = fragment.at_css("[data-action='click->recording-studio-shareable--share#native']")
+
+    assert sheet
+    assert_equal @published.url, sheet["data-recording-studio-shareable--share-url-value"]
+    assert_equal @published.title.to_s, sheet["data-recording-studio-shareable--share-title-value"]
+    assert native
+    assert native.key?("hidden")
+    assert share
+    assert_equal "Share", share["aria-label"]
+  end
+
   private
 
   def modal

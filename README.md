@@ -123,10 +123,10 @@ The dummy app pins these GitHub tags:
 | RecordingStudio | dummy GitHub tag `v4.5.0` |
 | Accessible | dummy GitHub tag `v0.15.0` |
 | Root Switchable | dummy GitHub tag `v0.9.0` |
-| FlatPack | dummy GitHub tag `v0.1.235` |
+| FlatPack | dummy GitHub tag `v0.1.329` |
 | Publishable | dummy GitHub tag `v0.8.1` |
 | Attachable | dummy GitHub tag `v0.15.0` |
 
-Publishable is not a dependency of this gem. The dummy app bundles it, with Attachable, so the page list can show real publish states. FlatPack is pinned to `v0.1.235` for `FlatPack::CopyButton`. Attachable requires `flat_pack >= 0.1.213`. Accessible stays on dummy GitHub tag `v0.15.0`.
+Publishable is not a dependency of this gem. The dummy app bundles it, with Attachable, so the page list can show real publish states. FlatPack is pinned to `v0.1.329` so `view_component` resolves at `>= 4.14`. Attachable requires `flat_pack >= 0.1.213`. Accessible stays on dummy GitHub tag `v0.15.0`.
 
 Sign in to the dummy app with `admin@admin.com` / `Password`.
