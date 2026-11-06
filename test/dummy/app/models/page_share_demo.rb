@@ -5,10 +5,13 @@ module PageShareDemo
   PUBLISHED_TITLE = "Getting Started"
   DRAFT_TITLE = "Studio notes"
   SCHEDULED_TITLE = "Fall listening session"
-  SCHEDULED_AT = Time.utc(2026, 11, 3, 15, 0, 0)
   Row = Struct.new(:key, :page, :recording, :payload, :status, :badge, keyword_init: true)
 
   class << self
+    def scheduled_at
+      Time.current.utc.change(min: 0, sec: 0) + 3.days
+    end
+
     def rows
       ensure!
       [
@@ -63,12 +66,13 @@ module PageShareDemo
 
     def schedule!(recording)
       publishable = recording.publishable_child_recording&.recordable
-      return if publishable&.scheduled_for_future? && publishable.publish_at == SCHEDULED_AT
+      at = scheduled_at
+      return if publishable&.scheduled_for_future? && publishable.publish_at.to_i == at.to_i
 
       call_service!(
         RecordingStudioPublishable::Services::Publishables::Update,
         parent_recording: recording,
-        attributes: { status: "published", publish_at: SCHEDULED_AT, unpublish_at: nil }
+        attributes: { status: "published", publish_at: at, unpublish_at: nil }
       )
     end
 
