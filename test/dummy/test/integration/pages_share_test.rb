@@ -15,30 +15,32 @@ class PagesShareTest < ActionDispatch::IntegrationTest
   end
 
   test "page list disables sharing until publishable says the page is public" do
-    get pages_path
+    travel_to Time.utc(2026, 6, 15, 12, 0, 0) do
+      get pages_path
 
-    assert_response :success
-    assert_select "h1", text: "Pages"
-    assert_select "#share-row-published [aria-label='Share this page'][data-modal-id='share-published']"
-    assert_select "#share-row-published [aria-disabled]", count: 0
-    assert_select "#share-published [role='dialog']"
+      assert_response :success
+      assert_select "h1", text: "Pages"
+      assert_select "#share-row-published [aria-label='Share this page'][data-modal-id='share-published']"
+      assert_select "#share-row-published [aria-disabled]", count: 0
+      assert_select "#share-published [role='dialog']"
 
-    draft = css_select("#share-row-draft").to_html
-    assert_includes draft, "Publish this page to share it"
-    assert_includes draft, 'aria-disabled="true"'
-    assert_includes draft, "aria-describedby"
-    assert_includes draft, 'disabled="disabled"'
-    refute_includes draft, "data-modal-id"
-    refute_includes draft, "href="
-    refute_share_url draft
+      draft = css_select("#share-row-draft").to_html
+      assert_includes draft, "Publish this page to share it"
+      assert_includes draft, 'aria-disabled="true"'
+      assert_includes draft, "aria-describedby"
+      assert_includes draft, 'disabled="disabled"'
+      refute_includes draft, "data-modal-id"
+      refute_includes draft, "href="
+      refute_share_url draft
 
-    scheduled = css_select("#share-row-scheduled").to_html
-    assert_includes scheduled, "Scheduled for Tuesday 3 November at 3:00 PM. You can share it then."
-    assert_includes scheduled, 'aria-disabled="true"'
-    assert_includes scheduled, 'tabindex="0"'
-    refute_includes scheduled, "href="
-    refute_share_url scheduled
-    refute_includes scheduled, "press.example"
+      scheduled = css_select("#share-row-scheduled").to_html
+      assert_includes scheduled, "Scheduled for Thursday 18 June at 12:00 PM. You can share it then."
+      assert_includes scheduled, 'aria-disabled="true"'
+      assert_includes scheduled, 'tabindex="0"'
+      refute_includes scheduled, "href="
+      refute_share_url scheduled
+      refute_includes scheduled, "press.example"
+    end
   end
 
   private
