@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dummy addon pins: Accessible `v0.44.0`, API `v0.24.0`, Attachable `v0.28.0`, Moveable `v5.0.0`, Trashable `v0.17.0`, Publishable `v0.18.1`, Metrics `v0.9.0`, FlatPack `v0.1.376`, Cache `v0.6.3`, Icons `v0.2.1`, Logs `v0.8.0`, Root Switchable `v0.16.0`.
 - Dummy writes go through `config.authorize_write`, which allows a write when an actor is present. Roots are created with `create_root_recording!(recordable, actor:)`. `root_recording_for` only finds an existing root.
 - Dummy recordable types no longer include `RecordingStudioAttachable::Library` or `RecordingStudioAttachable::Placement`. Attachable 0.28 does not declare those types.
+- Dummy recordable types include `RecordingStudioApi::AdminApi`, and `admin_root_recordable_type_names` is empty. API 0.24 declares that model on eager load against its default `AdminRoot` parent, which this dummy does not have.
 - The dummy root switcher lists workspaces through `RecordingStudioAccessible.root_recordings_for` and grants the seeded admin owner access on each demo root. Root Switchable 0.16 refuses the switch page unless the actor can view the current root.
 - The dummy authenticated layout opts in with `recording_studio_layout`. Devise still uses the application layout.
 - Parent-recording lookup for a scheduled share reason uses `Recording.kept`.
