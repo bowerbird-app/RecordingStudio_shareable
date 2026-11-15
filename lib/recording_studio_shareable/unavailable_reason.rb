@@ -84,15 +84,10 @@ module RecordingStudioShareable
       record = recordable
       return if record.nil? || record.class.name.blank? || !record.respond_to?(:id)
 
-      RecordingStudio::Recording.where(recording_conditions(record)).order(:created_at, :id).last
-    end
-
-    def recording_conditions(record)
-      conditions = { recordable_type: record.class.name, recordable_id: record.id }
-      return conditions unless defined?(RecordingStudioPublishable::TrashedAt)
-      return conditions unless RecordingStudioPublishable::TrashedAt.respond_to?(:merge_active)
-
-      RecordingStudioPublishable::TrashedAt.merge_active(conditions)
+      RecordingStudio::Recording.kept.where(
+        recordable_type: record.class.name,
+        recordable_id: record.id
+      ).order(:created_at, :id).last
     end
   end
 end

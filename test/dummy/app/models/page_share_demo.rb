@@ -27,13 +27,17 @@ module PageShareDemo
     end
 
     def recording_for(page)
-      RecordingStudio::Recording.where(recordable: page, trashed_at: nil).order(:created_at, :id).last
+      RecordingStudio::Recording.kept.where(recordable: page).order(:created_at, :id).last
     end
 
     def ensure!
+      previous_actor = Current.actor
+      Current.actor ||= demo_actor
       publish!(ensure_recording!(PUBLISHED_TITLE))
       draft!(ensure_recording!(DRAFT_TITLE))
       schedule!(ensure_recording!(SCHEDULED_TITLE))
+    ensure
+      Current.actor = previous_actor
     end
 
     private
@@ -93,17 +97,16 @@ module PageShareDemo
       existing = recording_for(page)
       return existing if existing
 
-      root = RecordingStudio.root_recording_for(workspace)
+      root = RecordingStudio.create_root_recording!(workspace, actor: Current.actor)
       folder_recording = child_recording(folder, root, root)
       child_recording(page, root, folder_recording)
     end
 
     def child_recording(recordable, root_recording, parent_recording)
-      RecordingStudio::Recording.find_by(
+      RecordingStudio::Recording.kept.find_by(
         root_recording: root_recording,
         parent_recording: parent_recording,
-        recordable: recordable,
-        trashed_at: nil
+        recordable: recordable
       ) || RecordingStudio.record!(
         action: "created",
         recordable: recordable,
@@ -118,6 +121,13 @@ module PageShareDemo
 
     def folder
       Folder.find_or_create_by!(name: "Product Docs")
+    end
+
+    def demo_actor
+      User.find_or_create_by!(email: "admin@admin.com") do |user|
+        user.password = "Password"
+        user.password_confirmation = "Password"
+      end
     end
   end
 end

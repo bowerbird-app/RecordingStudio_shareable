@@ -7,9 +7,7 @@ RecordingStudio.configure do |config|
     "Folder",
     "Page",
     "RecordingStudioPublishable::Publishable",
-    "RecordingStudioAttachable::Attachment",
-    "RecordingStudioAttachable::Library",
-    "RecordingStudioAttachable::Placement"
+    "RecordingStudioAttachable::Attachment"
   ]
 
   # Require each configured ActiveRecord type to call recording_studio_recordable.
@@ -20,6 +18,9 @@ RecordingStudio.configure do |config|
 
   # Actor resolver for events when no actor is explicitly supplied
   config.actor = -> { Current.actor }
+
+  # Core 6.5 fails closed without an authorizer. The dummy allows any present actor.
+  config.authorize_write = ->(actor:, **) { actor.present? }
 
   # Emit ActiveSupport::Notifications events
   config.event_notifications_enabled = true

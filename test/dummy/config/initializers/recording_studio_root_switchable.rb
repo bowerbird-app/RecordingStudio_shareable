@@ -5,8 +5,9 @@ RecordingStudioRootSwitchable.configure do |config|
     Current.actor || controller.current_user
   end
 
-  # Render the mounted switcher pages inside the app shell when users visit them.
-  config.layout = :application_layout
+  # Render the mounted switcher pages inside the default shell.
+  # Core 5 accepts a layout name, nil, false, or a keyword callable.
+  config.layout = "recording_studio/default_layout"
 
   config.after_switch_redirect = lambda do |controller:, return_to:, **|
     candidate_path = return_to.presence
@@ -22,12 +23,14 @@ RecordingStudioRootSwitchable.configure do |config|
   config.scope :all_workspaces do |scope|
     scope.label = "All workspaces"
     scope.description = "Every workspace root in the dummy app."
-    scope.available_roots = lambda do |**|
-      Workspace.order(:name).filter_map do |workspace|
-        RecordingStudio.root_recording_for(workspace)
-      end
+    scope.available_roots = lambda do |actor:, **|
+      next [] if actor.blank?
+
+      RecordingStudioAccessible.root_recordings_for(actor: actor, minimum_role: :view)
     end
-    scope.access_check = ->(**) { true }
+    scope.access_check = lambda do |actor:, recording: nil, **|
+      recording.blank? || RecordingStudioAccessible.authorized?(actor: actor, recording: recording, role: :view)
+    end
 
     scope.default_root = lambda do |roots:, **|
       roots.first

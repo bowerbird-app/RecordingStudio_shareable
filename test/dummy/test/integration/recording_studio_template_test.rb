@@ -5,9 +5,10 @@ require "test_helper"
 class RecordingStudioTemplateTest < ActiveSupport::TestCase
   test "dummy app loads root switchable config and controller support" do
     assert_equal [ "all_workspaces" ], RecordingStudioRootSwitchable.configuration.scopes.keys
-    assert_equal :application_layout, RecordingStudioRootSwitchable.configuration.layout
+    assert_equal "recording_studio/default_layout", RecordingStudioRootSwitchable.configuration.layout
     assert_includes ApplicationController.ancestors, RecordingStudio::RootSwitchable::ControllerSupport
-    assert_includes ApplicationController.ancestors, RecordingStudio::UsesDefaultLayout
+    assert_includes File.read(Rails.root.join("app/controllers/application_controller.rb")), "recording_studio_layout"
+    refute_includes ApplicationController.ancestors.map(&:name), "RecordingStudio::UsesDefaultLayout"
   end
 
   test "dummy app validates recordable declarations" do
@@ -20,6 +21,12 @@ class RecordingStudioTemplateTest < ActiveSupport::TestCase
     connection = ActiveRecord::Base.connection
 
     assert connection.column_exists?(:recording_studio_recordings, :root_recording_id)
+    assert connection.column_exists?(:recording_studio_events, :root_recording_id)
+    assert connection.index_exists?(
+      :recording_studio_recordings,
+      name: "index_recording_studio_recordings_on_single_child"
+    )
+    refute connection.index_exists?(:recording_studio_recordings, name: "index_rs_publishable_child_per_parent")
     assert connection.table_exists?(:recording_studio_accesses)
     assert connection.table_exists?(:recording_studio_access_constraints)
     assert connection.table_exists?(:recording_studio_access_rules)
@@ -88,6 +95,7 @@ class RecordingStudioTemplateTest < ActiveSupport::TestCase
     assert RecordingStudio.capability_enabled?(:shareable, for: Page)
     assert RecordingStudio.capability_enabled?(:publishable, for: Page)
     assert_equal [ "Page" ], RecordingStudio.configuration.enabled_recordable_types_for(:shareable)
-    assert_includes ApplicationController.ancestors, RecordingStudio::UsesDefaultLayout
+    assert_includes File.read(Rails.root.join("app/controllers/application_controller.rb")), "recording_studio_layout"
+    refute_includes ApplicationController.ancestors.map(&:name), "RecordingStudio::UsesDefaultLayout"
   end
 end
