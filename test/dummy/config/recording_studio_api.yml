@@ -1,0 +1,2 @@
+# Minimal Recording Studio API boot config. Hosts add clients per environment.
+shared: {}

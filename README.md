@@ -120,20 +120,20 @@ The dummy app pins these GitHub tags:
 
 | Gem | Tag |
 | --- | --- |
-| RecordingStudio | dummy GitHub tag `v7.0.0` |
-| Accessible | dummy GitHub tag `v0.44.0` |
-| API | dummy GitHub tag `v0.24.0` |
-| Attachable | dummy GitHub tag `v0.28.0` |
-| Cache | dummy GitHub tag `v0.6.3` |
-| FlatPack | dummy GitHub tag `v0.1.376` |
-| Icons | dummy GitHub tag `v0.2.1` |
-| Logs | dummy GitHub tag `v0.8.0` |
-| Metrics | dummy GitHub tag `v0.9.0` |
-| Moveable | dummy GitHub tag `v5.0.0` |
-| Publishable | dummy GitHub tag `v0.18.1` |
+| RecordingStudio | dummy GitHub tag `v7.7.1` |
+| Accessible | dummy GitHub tag `v0.54.0` |
+| API | dummy GitHub tag `v1.15.0` |
+| Attachable | dummy GitHub tag `v0.32.1` |
+| Cache | dummy GitHub tag `v0.7.0` |
+| FlatPack | dummy GitHub tag `v0.1.378` |
+| Icons | dummy GitHub tag `v0.4.1` |
+| Logs | dummy GitHub tag `v0.8.1` |
+| Metrics | dummy GitHub tag `v0.9.1` |
+| Moveable | dummy GitHub tag `v6.0.1` |
+| Publishable | dummy GitHub tag `v1.2.1` |
 | Root Switchable | dummy GitHub tag `v0.16.0` |
-| Trashable | dummy GitHub tag `v0.17.0` |
+| Trashable | dummy GitHub tag `v1.2.0` |
 
-Publishable is not a dependency of this gem. The dummy app bundles it, with Attachable, so the page list can show real publish states. Publishable 0.18 and Attachable 0.28 depend on API 0.24, which pulls Logs, Moveable, and Trashable. Root Switchable 0.16 is the core 7 release. FlatPack is pinned to `v0.1.376`. Accessible stays on dummy GitHub tag `v0.44.0`. Create roots with `RecordingStudio.create_root_recording!(recordable, actor:)`. `root_recording_for` only finds an existing root. The dummy root switcher lists roots the signed-in actor can view, and the seed grants the demo admin owner access on each workspace.
+Publishable is not a dependency of this gem. The dummy app bundles it, with Attachable, so the page list can show real publish states. Publishable 1.2 and Attachable 0.32 depend on the API engine, which pulls Logs, Moveable, and Trashable. Root Switchable stays on dummy GitHub tag `v0.16.0`. FlatPack is pinned to `v0.1.378`. Accessible is on dummy GitHub tag `v0.54.0`. Create roots with `RecordingStudio.create_root_recording!(recordable, actor:)`. `root_recording_for` only finds an existing root. The dummy root switcher lists roots the signed-in actor can view, and the seed grants the demo admin owner access on each workspace.
 
 Sign in to the dummy app with `admin@admin.com` / `Password`.
