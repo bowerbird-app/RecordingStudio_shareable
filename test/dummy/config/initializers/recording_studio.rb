@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 # API's default parent is AdminRoot. This dummy has no admin root, so clear
-# the list before eager load declares RecordingStudioApi::AdminApi.
+# the list. API 1.15 declares RecordingStudioApi::AdminApi only when an admin
+# root is configured, and then registers that type itself.
 RecordingStudioApi.configuration.admin_root_recordable_type_names = []
 
 RecordingStudio.configure do |config|
@@ -11,10 +12,7 @@ RecordingStudio.configure do |config|
     "Folder",
     "Page",
     "RecordingStudioPublishable::Publishable",
-    "RecordingStudioAttachable::Attachment",
-    # API loads this model on eager load and declares it. The engine only
-    # registers it when an admin root is configured.
-    "RecordingStudioApi::AdminApi"
+    "RecordingStudioAttachable::Attachment"
   ]
 
   # Require each configured ActiveRecord type to call recording_studio_recordable.

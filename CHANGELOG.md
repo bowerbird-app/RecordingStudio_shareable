@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.1] - 2026-11-18
+
+### Changed
+- Root and dummy lockfiles pin Recording Studio `v7.7.1` and FlatPack `v0.1.378`.
+- Dummy addon pins: Accessible `v0.54.0`, API `v1.15.0`, Attachable `v0.32.1`, Cache `v0.7.0`, Icons `v0.4.1`, Logs `v0.8.1`, Metrics `v0.9.1`, Moveable `v6.0.1`, Publishable `v1.2.1`, Trashable `v1.2.0`. Root Switchable stays `v0.16.0`.
+- Dummy app has a minimal `config/recording_studio_api.yml` (`shared: {}`). API 1.12 and newer raise at boot when that file is missing.
+- Dummy `recordable_types` no longer lists `RecordingStudioApi::AdminApi`. API 1.15 declares that model only when an admin root is configured. This dummy still sets `admin_root_recordable_type_names` to an empty list.
+
+### Upgrade notes
+- The gemspec requirement stays `recording_studio` `>= 7.0, < 8.0`. Development pins are Recording Studio `v7.7.1` and FlatPack `v0.1.378`.
+- Hosts that load API 1.12 or newer need `config/recording_studio_api.yml`. `shared: {}` is enough to boot.
+- This dummy does not include the Recording Studio 7.4, 7.5, or 7.7 root-index migrations.
+
 ## [0.7.0] - 2026-11-15
 
 ### Changed
@@ -189,7 +202,8 @@ New addons copied from this template are born on Recording Studio 4.x.
 - Comprehensive README and documentation
 - Basic test suite with Minitest
 
-[Unreleased]: https://github.com/bowerbird-app/recording_studio_shareable/compare/v0.7.0...HEAD
+[Unreleased]: https://github.com/bowerbird-app/recording_studio_shareable/compare/v0.7.1...HEAD
+[0.7.1]: https://github.com/bowerbird-app/recording_studio_shareable/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/bowerbird-app/recording_studio_shareable/compare/v0.6.2...v0.7.0
 [0.6.2]: https://github.com/bowerbird-app/recording_studio_shareable/compare/v0.6.1...v0.6.2
 [0.6.1]: https://github.com/bowerbird-app/recording_studio_shareable/compare/v0.6.0...v0.6.1
